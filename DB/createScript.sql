@@ -147,9 +147,7 @@ ALTER TABLE "dbo"."Recorrido" ADD CONSTRAINT "pkRecorrido"
 
 
 
-/* Remove Schemas */
 
-DROP SCHEMA "schemaA" CASCADE;
 
 
 
