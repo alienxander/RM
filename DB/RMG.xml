@@ -7,7 +7,7 @@
     <Tbl UsSo="1" nm="Alumno">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkAlumno"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Alumno_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Alumno_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="stdNumber" nu="0">
@@ -28,9 +28,6 @@
       <Cl au="0" df="" nm="id_curso" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
-      <Cl au="0" df="" nm="id_area" nu="0">
-        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
-      </Cl>
       <Cl au="0" df="" nm="id_recorrido" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
@@ -40,11 +37,9 @@
       <Cl au="0" df="" nm="telefono" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="9" sc="null" sg="1" un="0"/>
       </Cl>
-      <Fk deAc="3" nm="fk_Alumno_Area" prLkCl="id" upAc="3">
-        <PrTb mn="0" nm="Area" oe="1" sch="dbo" zr="0"/>
-        <CdTb mn="1" nm="Alumno" oe="0" sch="dbo" zr="1"/>
-        <ClPr cdCl="id_area" prCl="id"/>
-      </Fk>
+      <Cl au="0" df="" nm="email" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="30" sc="null" sg="1" un="0"/>
+      </Cl>
       <Fk deAc="3" nm="fk_Alumno_Comuna" prLkCl="id" upAc="3">
         <PrTb mn="0" nm="Comuna" oe="1" sch="dbo" zr="0"/>
         <CdTb mn="1" nm="Alumno" oe="0" sch="dbo" zr="1"/>
@@ -66,11 +61,14 @@
     <Tbl UsSo="1" nm="Area">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkArea"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Area_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Area_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
+      <Cl au="0" df="" nm="codigo" nu="0">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="3" sc="null" sg="1" un="0"/>
+      </Cl>
       <Cl au="0" df="" nm="descripcion" nu="0">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="10" sc="null" sg="1" un="0"/>
+        <DT arr="0" ds="VarChar" en="" id="12" ln="50" sc="null" sg="1" un="0"/>
       </Cl>
       <UniqueConstraints/>
       <SchTrHis/>
@@ -78,7 +76,7 @@
     <Tbl UsSo="1" nm="Bus">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkBus"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Bus_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Bus_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="patente" nu="0">
@@ -109,14 +107,14 @@
     <Tbl UsSo="1" nm="Comuna">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkComuna"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Comuna_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Comuna_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="codigo" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="5" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="descripcion" nu="0">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="15" sc="null" sg="1" un="0"/>
+        <DT arr="0" ds="VarChar" en="" id="12" ln="30" sc="null" sg="1" un="0"/>
       </Cl>
       <UniqueConstraints/>
       <SchTrHis/>
@@ -124,7 +122,7 @@
     <Tbl UsSo="1" nm="Conductor">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkConductor"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Conductor_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Conductor_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="rut" nu="0">
@@ -142,19 +140,27 @@
     <Tbl UsSo="1" nm="Curso">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkCurso"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Curso_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Curso_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="descripcion" nu="0">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="4" sc="null" sg="1" un="0"/>
+        <DT arr="0" ds="VarChar" en="" id="12" ln="15" sc="null" sg="1" un="0"/>
       </Cl>
+      <Cl au="0" df="" nm="id_area" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Fk deAc="3" nm="fk_Curso_Area" prLkCl="id" upAc="3">
+        <PrTb mn="0" nm="Area" oe="1" sch="dbo" zr="0"/>
+        <CdTb mn="1" nm="Curso" oe="1" sch="dbo" zr="0"/>
+        <ClPr cdCl="id_area" prCl="id"/>
+      </Fk>
       <UniqueConstraints/>
       <SchTrHis/>
     </Tbl>
     <Tbl UsSo="1" nm="Recorrido">
       <TblOpts>WITHOUT OIDS</TblOpts>
       <Pk ClNs="id" nm="pkRecorrido"/>
-      <Cl au="1" df="nextval('&quot;schemaRM&quot;.&quot;Recorrido_id_seq&quot;'::regclass)" nm="id" nu="0">
+      <Cl au="1" df="nextval('dbo.&quot;Recorrido_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="codigo" nu="0">
@@ -221,12 +227,6 @@
     <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Conductor" x="391" y="453"/>
     <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Curso" x="58" y="50"/>
     <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Recorrido" x="681" y="223"/>
-    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.Alumno.fk_Alumno_Area" parentEdge="EAST" positioner="TwoLineUserLinkPositioner">
-      <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="255" x2="378" y1="373" y2="373"/>
-        <positionableLine lineRole="CHILD_LINE" x1="382" x2="382" y1="312" y2="369"/>
-      </positionableLines>
-    </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Alumno.fk_Alumno_Comuna" parentEdge="WEST" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
         <positionableLine lineRole="PARENT_LINE" x1="694" x2="609" y1="65" y2="65"/>
@@ -235,7 +235,7 @@
     </FkGl>
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Alumno.fk_Alumno_Curso" parentEdge="EAST" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="278" x2="378" y1="83" y2="83"/>
+        <positionableLine lineRole="PARENT_LINE" x1="286" x2="378" y1="83" y2="83"/>
         <positionableLine lineRole="CHILD_LINE" x1="382" x2="382" y1="94" y2="87"/>
       </positionableLines>
     </FkGl>
@@ -252,6 +252,11 @@
     <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Bus.fk_Bus_Recorrido" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
         <positionableLine lineRole="SINGLE_LINE" x1="896" x2="896" y1="329" y2="387"/>
+      </positionableLines>
+    </FkGl>
+    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.Curso.fk_Curso_Area" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
+      <positionableLines>
+        <positionableLine lineRole="SINGLE_LINE" x1="156" x2="156" y1="340" y2="140"/>
       </positionableLines>
     </FkGl>
     <Notes/>
