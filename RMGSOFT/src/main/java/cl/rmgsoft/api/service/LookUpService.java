@@ -5,4 +5,5 @@ import cl.rmgsoft.api.response.ResponseObject;
 
 public interface LookUpService {
 	public ResponseObject getLista(LookUpRequest request);
+	public ResponseObject getConductores();
 }

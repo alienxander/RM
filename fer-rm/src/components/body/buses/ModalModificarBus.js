@@ -1,68 +1,127 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
+    Button,
     Modal,
-    Button
+    InputGroup,
+    Dropdown,
+    DropdownButton,
+    FormControl
 } from 'react-bootstrap';
+
+import RequestHttpService from '../../service/RequestHttpService';
+import MessageManagerService from '../../service/MessageManagerService';
 
 class ModalModificarBus extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            bus: props.bus
+            bus: props.bus,
+            listaConductores: [],
+            listaRecorridos: []
         }
         this.txtIdRef = React.createRef();
         this.txtPatenteRef = React.createRef();
         this.cmbConductorRef = React.createRef();
+        this.tagConductorRef = React.createRef();
         this.txtDescripcionRef = React.createRef();
+        this.cmbRecorridoRef = React.createRef();
+        this.txtRecorridoRef = React.createRef();
 
-        this.handleClickGuardar = this.handleClickGuardar.bind(this);
     }
 
 
-    componentDidUpdate(prevState, prevProps){
+    componentDidUpdate(prevState, prevProps) {
         console.log("componentDidUpdate modal modificar", prevState, prevProps, this.props);
-        if(prevProps != this.props){
+        if (prevProps != this.props) {
             this.state.bus = this.props.bus;
         }
     }
 
+    componentDidMount() {
 
-    componentDidMount(){
+        RequestHttpService.obtenerConductores(this.callobtenerConductoresOK, this.callobtenerConductoresError);
+        RequestHttpService.obtenerRecorridos(this.callObtenerRecorridosOK, this.callObtenerRecorridosError);
+
         const bus = this.state.bus;
         var selConductor = this.cmbConductorRef.current;
         console.log("BUs componentDidMount: ", this.cmbConductorRef.current);
-        if(bus !== null){
+        console.log("BUs selConductor: ", selConductor);
+        if (bus !== null) {
             this.txtIdRef.current.value = bus.id;
             this.txtPatenteRef.current.value = bus.patente;
             //selConductor.options.text = bus.conductor;
-            for (var i = 0; i < selConductor.options.length; i++) {
-                //  Aca haces referencia al "option" actual
-                var opt = selConductor.options[i];
-                
-                if(opt.text === bus.conductor){
-                    selConductor.selectedIndex = i;
-                    break;
-                }
-               
-            }
+            // for (var i = 0; i < selConductor.options.length; i++) {
+            //     //  Aca haces referencia al "option" actual
+            //     var opt = selConductor.options[i];
+
+            //     if (opt.text === bus.conductor) {
+            //         selConductor.selectedIndex = i;
+            //         break;
+            //     }
+
+            // }
             this.txtDescripcionRef.current.value = bus.descripcion;
         }
     }
 
-
-    handleClickGuardar() {
-        // console.log("txtStdNumberRef: ", this.txtStdNumberRef);
-        // alert(this.txtStdNumberRef.current.value);
-        var selConductor = this.cmbConductorRef.current;
-        this.props.handleSave(this.state.bus, { 
-            id: this.txtIdRef.current.value,
-            patente: this.txtPatenteRef.current.value,
-            conductor: selConductor.options[selConductor.selectedIndex].text,
-            descripcion: this.txtDescripcionRef.current.value
-        });
+    callobtenerConductoresOK = (response) => {
+        let listaConductores = response.data.Body;
+        console.log("Response Conductores: ", JSON.stringify(response));
+        this.setState({ listaConductores: listaConductores });
     }
 
+    callobtenerConductoresError = (error) => {
+        console.log("Error Lista conductores: ", error);
+        MessageManagerService.throwMessageError(error);
+    }
+
+    callObtenerRecorridosOK = (response) => {
+        let listaRecorridos = response.data.Body;
+        console.log("Response recorridos: ", response);
+        this.setState({ listaRecorridos: listaRecorridos });
+    }
+
+    callObtenerRecorridosError = (error) => {
+        console.log("Error Lista recorridos: ", error);
+        MessageManagerService.throwMessageError(error);
+    }
+
+    handleClickGuardar = () => {
+
+        var request = {
+            id: this.txtIdRef.current.value,
+            patente: this.txtPatenteRef.current.value,
+            idConductor: this.cmbConductorRef.current.value,
+            descripcion: this.txtDescripcionRef.current.value,
+            idRecorrido: this.txtRecorridoRef.current.value
+        }
+
+        RequestHttpService.modificaBus(request, this.callModificaBusOK, this.callModificaBusError);
+
+    }
+
+    callModificaBusOK = (response) => {
+        if (response.data.Message.code === "00") {
+            alert("Bus modificado correctamente");
+        } else {
+            alert("Error al modificar Bus");
+        }
+    }
+
+    callModificaBusError = (error) => {
+        console.log("Error modificar Bus: ", error);
+        MessageManagerService.throwMessageError(error);
+    }
+
+    handleClickConductor = (idConductor, rutConductor) => {
+        this.cmbConductorRef.current.value = idConductor;
+        this.tagConductorRef.current.value = rutConductor;
+    }
+
+    handleClickRecorrido = (idrecorrido) => {
+        this.txtRecorridoRef.current.value = idrecorrido;
+    }
 
     render() {
         return (
@@ -87,26 +146,61 @@ class ModalModificarBus extends Component {
                                 <div className="col-2">
                                     <div className="form-group">
                                         <label for="idTxtId" className="title-input-form">ID</label>
-                                        <input type="text" id="idTxtId" ref={this.txtIdRef} className="form-control" placeholder="ID" aria-label="ID" aria-describedby="Identificador del bus" />
+                                        <input type="text" id="idTxtId" ref={this.txtIdRef} className="form-control" placeholder="ID" aria-label="ID" aria-describedby="Identificador del bus" disabled />
                                     </div>
                                 </div>
                                 <div className="col-2">
                                     <div className="form-group">
                                         <label for="idTxtPatente" className="title-input-form">Patente</label>
-                                        <input type="text" id="idTxtPatente" ref={this.txtPatenteRef} className="form-control" placeholder="Patente" aria-label="Patente" aria-describedby="Placa Patente del bus" />
+                                        <input type="text" id="idTxtPatente" ref={this.txtPatenteRef} className="form-control" placeholder="Patente" aria-label="Patente" aria-describedby="Placa Patente del bus" maxlength="7" />
                                     </div>
                                 </div>
-                                <div className="col-4">
-                                    <div className="form-group">
-                                        <label for="idCmbConductor" className="title-input-form">Conductor</label>
-                                        <select class="form-control" id="idCmbConductor" ref={this.cmbConductorRef}>
-                                            <option value="1">Conductor 1</option>
-                                            <option value="2">Conductor 2</option>
-                                            <option value="3">Conductor 3</option>
-                                            <option value="4">Conductor 4</option>
-                                        </select>
-                                    </div>
+                                <div className="col-3">
+
+                                    <label for="idCmbConductor" className="title-input-form">Conductor</label>
+                                    <InputGroup className="mb-3">
+                                        <DropdownButton
+                                            className="title-input-form"
+                                            variant="outline-secondary"
+                                            title="Conductor"
+                                            id="idCmbConductor"
+                                            ref={this.cmbConductorRef}
+                                        >
+                                            {this.state.listaConductores.map((item) => {
+                                                return <Dropdown.Item href="#">
+                                                    <div onClick={() => this.handleClickConductor(item.id, item.rut)}>{item.nombre} {item.apellido} </div>
+                                                </Dropdown.Item>;
+                                            })
+                                            }
+
+                                        </DropdownButton>
+                                        <FormControl aria-label="Lista de Conductores" id="idTxtConductor" ref={this.tagConductorRef} />
+                                    </InputGroup>
+
                                 </div>
+
+                                <div className="col-3">
+                                    <label for="idCmbRecorrido" className="title-input-form">Recorrido</label>
+                                    <InputGroup className="mb-3">
+                                        <DropdownButton
+                                            className="title-input-form"
+                                            variant="outline-secondary"
+                                            title="Recorrido"
+                                            id="idCmbRecorrido"
+                                            ref={this.cmbRecorridoRef}
+                                        >
+                                            {this.state.listaRecorridos.map((item) => {
+                                                return <Dropdown.Item href="#">
+                                                    <div onClick={() => this.handleClickRecorrido(item.id)}>{item.codigo}</div>
+                                                </Dropdown.Item>;
+                                            })
+                                            }
+
+                                        </DropdownButton>
+                                        <FormControl aria-label="Lista de recorridos" id="idTxtRecorrido" ref={this.txtRecorridoRef} />
+                                    </InputGroup>
+                                </div>
+
                             </div>
                             <div className="row">
                                 <div className="col-6">

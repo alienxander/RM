@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.rmgsoft.api.dao.LookUpDAO;
+import cl.rmgsoft.api.model.Conductor;
 import cl.rmgsoft.api.model.LookUp;
 import cl.rmgsoft.api.request.LookUpRequest;
 import cl.rmgsoft.api.response.ResponseObject;
@@ -23,7 +24,6 @@ public class LookUpServiceImpl implements LookUpService{
 	LookUpDAO lookUpDao;
 	@Override
 	public ResponseObject getLista(LookUpRequest request) {
-		// TODO Auto-generated method stub
 		List<LookUp> lista = lookUpDao.getLista(request);
 		
 		message.setCode("00");
@@ -33,6 +33,18 @@ public class LookUpServiceImpl implements LookUpService{
 		responseObject.setBody(lista);
 		responseObject.setMessage(message);
 		
+		return responseObject;
+	}
+	@Override
+	public ResponseObject getConductores() {
+
+		List<Conductor> lista = lookUpDao.getConductores();
+		message.setCode("00");
+		message.setType(MessageType.OK);
+		message.setTitle("EXITO");
+		message.setDescription("El servicio ha respondido correctamente");
+		responseObject.setBody(lista);
+		responseObject.setMessage(message);
 		return responseObject;
 	}
 	
