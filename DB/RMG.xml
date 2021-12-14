@@ -2,7 +2,7 @@
   <VerLbl/>
   <VerNotes/>
   <DefTblOpts/>
-  <DocFolder>D:\TRABAJO\Proyectos\RM\repositorio\RM\DB</DocFolder>
+  <DocFolder>C:\Users\alexa\OneDrive\Escritorio</DocFolder>
   <Sch Cm="" nm="dbo">
     <Tbl UsSo="1" nm="Alumno">
       <TblOpts>WITHOUT OIDS</TblOpts>
@@ -28,7 +28,7 @@
       <Cl au="0" df="" nm="id_curso" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
-      <Cl au="0" df="" nm="id_recorrido" nu="0">
+      <Cl au="0" df="" nm="id_bus" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="direccion" nu="0">
@@ -40,6 +40,11 @@
       <Cl au="0" df="" nm="email" nu="1">
         <DT arr="0" ds="VarChar" en="" id="12" ln="30" sc="null" sg="1" un="0"/>
       </Cl>
+      <Fk deAc="3" nm="fk_Alumno_Bus" prLkCl="id" upAc="3">
+        <PrTb mn="0" nm="Bus" oe="1" sch="dbo" zr="0"/>
+        <CdTb mn="1" nm="Alumno" oe="1" sch="dbo" zr="0"/>
+        <ClPr cdCl="id_bus" prCl="id"/>
+      </Fk>
       <Fk deAc="3" nm="fk_Alumno_Comuna" prLkCl="id" upAc="3">
         <PrTb mn="0" nm="Comuna" oe="1" sch="dbo" zr="0"/>
         <CdTb mn="1" nm="Alumno" oe="0" sch="dbo" zr="1"/>
@@ -50,11 +55,6 @@
         <CdTb mn="1" nm="Alumno" oe="0" sch="dbo" zr="1"/>
         <ClPr cdCl="id_curso" prCl="id"/>
       </Fk>
-      <Fk deAc="3" nm="fk_Alumno_Recorrido" prLkCl="id" upAc="3">
-        <PrTb mn="0" nm="Recorrido" oe="1" sch="dbo" zr="0"/>
-        <CdTb mn="1" nm="Alumno" oe="0" sch="dbo" zr="1"/>
-        <ClPr cdCl="id_recorrido" prCl="id"/>
-      </Fk>
       <UniqueConstraints/>
       <SchTrHis/>
     </Tbl>
@@ -64,11 +64,11 @@
       <Cl au="1" df="nextval('dbo.&quot;Area_id_seq&quot;'::regclass)" nm="id" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
-      <Cl au="0" df="" nm="codigo" nu="0">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="3" sc="null" sg="1" un="0"/>
-      </Cl>
       <Cl au="0" df="" nm="descripcion" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="50" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Cl au="0" df="" nm="codigo" nu="0">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="3" sc="null" sg="1" un="0"/>
       </Cl>
       <UniqueConstraints/>
       <SchTrHis/>
@@ -82,23 +82,57 @@
       <Cl au="0" df="" nm="patente" nu="0">
         <DT arr="0" ds="VarChar" en="" id="12" ln="7" sc="null" sg="1" un="0"/>
       </Cl>
+      <Cl au="0" df="" nm="descripcion" nu="1">
+        <DT arr="0" ds="VarChar" en="" id="12" ln="30" sc="null" sg="1" un="0"/>
+      </Cl>
+      <UniqueConstraints/>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="bus_conductor">
+      <TblOpts>WITHOUT OIDS</TblOpts>
+      <Pk ClNs="id" nm="pkbus_conductor"/>
+      <Cl au="1" df="nextval('dbo.bus_conductor_id_seq'::regclass)" nm="id" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
       <Cl au="0" df="" nm="id_conductor" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
-      <Cl au="0" df="" nm="descripcion" nu="1">
-        <DT arr="0" ds="VarChar" en="" id="12" ln="30" sc="null" sg="1" un="0"/>
+      <Cl au="0" df="" nm="id_bus" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Fk deAc="3" nm="fk_bus_conductor_Bus" prLkCl="id" upAc="3">
+        <PrTb mn="0" nm="Bus" oe="1" sch="dbo" zr="0"/>
+        <CdTb mn="1" nm="bus_conductor" oe="0" sch="dbo" zr="1"/>
+        <ClPr cdCl="id_bus" prCl="id"/>
+      </Fk>
+      <Fk deAc="3" nm="fk_bus_conductor_Conductor" prLkCl="id" upAc="3">
+        <PrTb mn="0" nm="Conductor" oe="1" sch="dbo" zr="0"/>
+        <CdTb mn="1" nm="bus_conductor" oe="0" sch="dbo" zr="1"/>
+        <ClPr cdCl="id_conductor" prCl="id"/>
+      </Fk>
+      <UniqueConstraints/>
+      <SchTrHis/>
+    </Tbl>
+    <Tbl UsSo="1" nm="bus_recorrido">
+      <TblOpts>WITHOUT OIDS</TblOpts>
+      <Pk ClNs="id" nm="pkbus_recorrido"/>
+      <Cl au="1" df="nextval('dbo.bus_recorrido_id_seq'::regclass)" nm="id" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
+      </Cl>
+      <Cl au="0" df="" nm="id_bus" nu="0">
+        <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
       <Cl au="0" df="" nm="id_recorrido" nu="0">
         <DT arr="0" ds="Integer" en="" id="4" ln="null" sc="null" sg="1" un="0"/>
       </Cl>
-      <Fk deAc="3" nm="fk_Bus_Conductor" prLkCl="id" upAc="3">
-        <PrTb mn="0" nm="Conductor" oe="1" sch="dbo" zr="0"/>
-        <CdTb mn="1" nm="Bus" oe="0" sch="dbo" zr="1"/>
-        <ClPr cdCl="id_conductor" prCl="id"/>
+      <Fk deAc="3" nm="fk_bus_recorrido_Bus" prLkCl="id" upAc="3">
+        <PrTb mn="0" nm="Bus" oe="1" sch="dbo" zr="0"/>
+        <CdTb mn="1" nm="bus_recorrido" oe="0" sch="dbo" zr="1"/>
+        <ClPr cdCl="id_bus" prCl="id"/>
       </Fk>
-      <Fk deAc="3" nm="fk_Bus_Recorrido" prLkCl="id" upAc="3">
+      <Fk deAc="3" nm="fk_bus_recorrido_Recorrido" prLkCl="id" upAc="3">
         <PrTb mn="0" nm="Recorrido" oe="1" sch="dbo" zr="0"/>
-        <CdTb mn="1" nm="Bus" oe="0" sch="dbo" zr="1"/>
+        <CdTb mn="1" nm="bus_recorrido" oe="0" sch="dbo" zr="1"/>
         <ClPr cdCl="id_recorrido" prCl="id"/>
       </Fk>
       <UniqueConstraints/>
@@ -151,7 +185,7 @@
       </Cl>
       <Fk deAc="3" nm="fk_Curso_Area" prLkCl="id" upAc="3">
         <PrTb mn="0" nm="Area" oe="1" sch="dbo" zr="0"/>
-        <CdTb mn="1" nm="Curso" oe="1" sch="dbo" zr="0"/>
+        <CdTb mn="1" nm="Curso" oe="0" sch="dbo" zr="1"/>
         <ClPr cdCl="id_area" prCl="id"/>
       </Fk>
       <UniqueConstraints/>
@@ -181,7 +215,13 @@
     <Seq incr="1" nm="Area_id_seq" start="1">
       <Cm>DbWrench Autogenerated Sequence.</Cm>
     </Seq>
+    <Seq incr="1" nm="bus_conductor_id_seq" start="1">
+      <Cm>DbWrench Autogenerated Sequence.</Cm>
+    </Seq>
     <Seq incr="1" nm="Bus_id_seq" start="1">
+      <Cm>DbWrench Autogenerated Sequence.</Cm>
+    </Seq>
+    <Seq incr="1" nm="bus_recorrido_id_seq" start="1">
       <Cm>DbWrench Autogenerated Sequence.</Cm>
     </Seq>
     <Seq incr="1" nm="Comuna_id_seq" start="1">
@@ -220,49 +260,71 @@
       <DbTableRectangleFill>HeaderFooterFill</DbTableRectangleFill>
       <svg path=""/>
     </DiaProps>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Alumno" x="377" y="94"/>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Area" x="27" y="340"/>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Bus" x="775" y="387"/>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Comuna" x="694" y="24"/>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Conductor" x="391" y="453"/>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Curso" x="58" y="50"/>
-    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Recorrido" x="681" y="223"/>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Alumno.fk_Alumno_Comuna" parentEdge="WEST" positioner="TwoLineUserLinkPositioner">
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Alumno" x="302" y="15"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Area" x="35" y="233"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Bus" x="654" y="111"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Comuna" x="701" y="0"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Conductor" x="1058" y="333"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Curso" x="106" y="397"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="Recorrido" x="651" y="415"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="bus_conductor" x="1001" y="109"/>
+    <TbGl bkCl="ff4c78ff" sch="dbo" tbl="bus_recorrido" x="671" y="268"/>
+    <FkGl bkCl="ff000000" childEdge="EAST" nm="dbo.Alumno.fk_Alumno_Bus" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="694" x2="609" y1="65" y2="65"/>
-        <positionableLine lineRole="CHILD_LINE" x1="605" x2="605" y1="94" y2="69"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="654" x2="529" y1="156" y2="156"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Alumno.fk_Alumno_Curso" parentEdge="EAST" positioner="TwoLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="EAST" nm="dbo.Alumno.fk_Alumno_Comuna" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="PARENT_LINE" x1="286" x2="378" y1="83" y2="83"/>
-        <positionableLine lineRole="CHILD_LINE" x1="382" x2="382" y1="94" y2="87"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="701" x2="529" y1="45" y2="45"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="EAST" nm="dbo.Alumno.fk_Alumno_Recorrido" parentEdge="WEST" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.Alumno.fk_Alumno_Curso" parentEdge="EAST" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="681" x2="610" y1="276" y2="276"/>
+        <positionableLine lineRole="PARENT_LINE" x1="334" x2="462" y1="402" y2="402"/>
+        <positionableLine lineRole="CHILD_LINE" x1="466" x2="466" y1="233" y2="398"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="WEST" nm="dbo.Bus.fk_Bus_Conductor" parentEdge="EAST" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.bus_conductor.fk_bus_conductor_Bus" parentEdge="EAST" positioner="TwoLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="598" x2="775" y1="458" y2="458"/>
+        <positionableLine lineRole="PARENT_LINE" x1="882" x2="1002" y1="208" y2="208"/>
+        <positionableLine lineRole="CHILD_LINE" x1="1006" x2="1006" y1="199" y2="204"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Bus.fk_Bus_Recorrido" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.bus_conductor.fk_bus_conductor_Conductor" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="896" x2="896" y1="329" y2="387"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="1166" x2="1166" y1="333" y2="199"/>
       </positionableLines>
     </FkGl>
-    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.Curso.fk_Curso_Area" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
+    <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.bus_recorrido.fk_bus_recorrido_Bus" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
       <positionableLines>
-        <positionableLine lineRole="SINGLE_LINE" x1="156" x2="156" y1="340" y2="140"/>
+        <positionableLine lineRole="SINGLE_LINE" x1="784" x2="784" y1="201" y2="268"/>
+      </positionableLines>
+    </FkGl>
+    <FkGl bkCl="ff000000" childEdge="SOUTH" nm="dbo.bus_recorrido.fk_bus_recorrido_Recorrido" parentEdge="NORTH" positioner="OneLineUserLinkPositioner">
+      <positionableLines>
+        <positionableLine lineRole="SINGLE_LINE" x1="778" x2="778" y1="415" y2="358"/>
+      </positionableLines>
+    </FkGl>
+    <FkGl bkCl="ff000000" childEdge="NORTH" nm="dbo.Curso.fk_Curso_Area" parentEdge="SOUTH" positioner="OneLineUserLinkPositioner">
+      <positionableLines>
+        <positionableLine lineRole="SINGLE_LINE" x1="258" x2="258" y1="323" y2="397"/>
       </positionableLines>
     </FkGl>
     <Notes/>
     <Zones/>
   </Dgm>
-  <RnmMgr/>
+  <RnmMgr>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="bus_recorrido" SupCls="Schema" SupNme="dbo">
+      <Rnm nNm="id" oNm="Id"/>
+    </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="bus_conductor" SupCls="Schema" SupNme="dbo">
+      <Rnm nNm="id" oNm="Id"/>
+    </RnmCh>
+    <RnmCh ObjCls="Column" ParCls="Table" ParNme="Alumno" SupCls="Schema" SupNme="dbo">
+      <Rnm nNm="id_bus" oNm="id_recorrido"/>
+    </RnmCh>
+  </RnmMgr>
   <DbDocOptionMgr>
     <BasicOptionMgr>
       <Name>db.doc.option.mgr</Name>
@@ -283,8 +345,6 @@
   </OpenEditors>
   <TreePaths>
     <TreePath/>
-    <TreePath>/Schemas (1)</TreePath>
-    <TreePath>/Schemas (1)/dbo</TreePath>
   </TreePaths>
   <SqlTexts/>
 </Db>
