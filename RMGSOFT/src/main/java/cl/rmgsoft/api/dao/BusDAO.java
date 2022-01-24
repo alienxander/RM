@@ -12,4 +12,10 @@ public interface BusDAO {
 	public int deleteBus(int idBus);
 
 	public int updateBus(Bus bus);
+
+	public int asignarInsertBus(Bus bus);
+
+	public int asignarDeleteBus(Bus bus);
+
+	public int asignarUpdateBus(Bus bus);
 }

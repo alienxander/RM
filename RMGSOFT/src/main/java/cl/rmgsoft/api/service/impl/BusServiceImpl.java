@@ -115,4 +115,72 @@ public class BusServiceImpl implements BusService {
 		responseObject.setMessage(message);
 		return responseObject;
 	}
-}
+
+	@Override
+	public ResponseObject asignarBus(Bus bus) {
+
+		int response = 0;
+
+		// si es igual a "0" no existe ninguna relación con el bus y requiere un insert
+		if ("0".equals(bus.getIdBusConductorRecorrido())){
+			response = busDAO.asignarInsertBus(bus);
+		}else{ //ya esiste una relación creada en la tabla relacional con el bus
+
+			//si ambos id vienen en 1 requiere borrado de la tabla relacional.
+			if (1 == bus.getIdRecorrido() && 1 == bus.getIdConductor()){ 
+				response = busDAO.asignarDeleteBus(bus);
+			}else{ // si almenos un id es diferente de 1 requiere un update. 
+				response = busDAO.asignarUpdateBus(bus); 
+			}
+		}
+	
+
+		// response OK del insert realizado retorna el valor "1"
+		if (response == 1) {
+
+			message.setCode("00");
+			message.setType(MessageType.OK);
+			message.setTitle("EXITO");
+			message.setDescription("El servicio ha respondido correctamente");
+		} else {
+
+			message.setCode("99");
+			message.setType(MessageType.ERROR);
+			message.setTitle("ERROR");
+			message.setDescription("El servicio ha tenido un error");
+		}
+
+		responseObject.setBody(null);
+		responseObject.setMessage(message);
+		return responseObject;
+	}
+
+
+	@Override
+	public ResponseObject asignarNuevoBus(Bus bus) {
+
+		int response = 0;
+
+		response = busDAO.asignarInsertBus(bus);
+
+		// response OK del insert realizado retorna el valor "1"
+		if (response == 1) {
+
+			message.setCode("00");
+			message.setType(MessageType.OK);
+			message.setTitle("EXITO");
+			message.setDescription("El servicio ha respondido correctamente");
+		} else {
+
+			message.setCode("99");
+			message.setType(MessageType.ERROR);
+			message.setTitle("ERROR");
+			message.setDescription("El servicio ha tenido un error");
+		}
+
+		responseObject.setBody(null);
+		responseObject.setMessage(message);
+		return responseObject;
+	}
+
+}// fin class

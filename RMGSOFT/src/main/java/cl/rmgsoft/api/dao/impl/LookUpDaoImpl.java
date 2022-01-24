@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cl.rmgsoft.api.dao.LookUpDAO;
-import cl.rmgsoft.api.dao.mapper.ConductorMapper;
+import cl.rmgsoft.api.dao.mapper.ConductorLookUpMapper;
 import cl.rmgsoft.api.dao.mapper.LookUpMapper;
 import cl.rmgsoft.api.model.Conductor;
 import cl.rmgsoft.api.model.LookUp;
@@ -28,7 +28,7 @@ public class LookUpDaoImpl implements LookUpDAO{
 
 		String sql = "SELECT id, rut, nombre, apellido\r\n" + 
 				"FROM dbo.\"Conductor\"";
-		return jdbcTemplate.query(sql, new ConductorMapper());
+		return jdbcTemplate.query(sql, new ConductorLookUpMapper());
 	}
 	
 }

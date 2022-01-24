@@ -45,4 +45,16 @@ public class BusController {
 		return busService.updateBus(bus);
 	}
 
+	@PutMapping("/put/asignarBus")
+	public ResponseObject asignarBus(@RequestBody Bus bus) {
+
+		return busService.asignarBus(bus);
+	}
+
+	@PutMapping("/put/asignarNuevoBus")
+	public ResponseObject asignarNuevoBus(@RequestBody Bus bus) {
+
+		return busService.asignarNuevoBus(bus);
+	}
+
 }

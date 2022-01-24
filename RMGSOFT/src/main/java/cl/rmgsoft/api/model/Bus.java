@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class Bus implements Serializable{
 
 	private static final long serialVersionUID = 8966543669878853122L;
-	private int id;
+	private int idBus;
 	private String patente;
 	private int idConductor;
 	private String rutConductor;
@@ -19,4 +19,6 @@ public class Bus implements Serializable{
 	private String descripcion;
 	private String recorrido;
 	private int idRecorrido;
+	private String horario;
+	private String idBusConductorRecorrido;
 }
