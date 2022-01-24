@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import MessageManagerService from '../../service/MessageManagerService';
+import RequestHttpService from '../../service/RequestHttpService';
 import {
     Modal,
     Button
@@ -15,56 +17,55 @@ class ModalModificarConductor extends Component {
         this.txtRutRef = React.createRef();
         this.txtNombreRef = React.createRef();
         this.txtApellidoRef = React.createRef();
-        this.cmbBusAsignadoRef = React.createRef();
 
-        this.handleClickGuardar = this.handleClickGuardar.bind(this);
     }
 
 
-    componentDidUpdate(prevState, prevProps){
+    componentDidUpdate(prevState, prevProps) {
         console.log("componentDidUpdate modal modificar", prevState, prevProps, this.props);
-        if(prevProps != this.props){
-            this.state.conductor = this.props.conductor;
+        if (prevProps !== this.props) {
+            this.setState({ conductor: this.props.conductor });
         }
     }
 
 
-    componentDidMount(){
+    componentDidMount() {
         const conductor = this.state.conductor;
-        var selBusAsignado = this.cmbBusAsignadoRef.current;
         //console.log("BUs componentDidMount: ", this.cmbConductorRef.current);
-        if(conductor !== null){
+        if (conductor !== null) {
             this.txtIdRef.current.value = conductor.id;
             this.txtRutRef.current.value = conductor.rut;
             this.txtNombreRef.current.value = conductor.nombre;
             this.txtApellidoRef.current.value = conductor.apellido;
-            //selConductor.options.text = bus.conductor;
-            for (var i = 0; i < selBusAsignado.options.length; i++) {
-                //  Aca haces referencia al "option" actual
-                var opt = selBusAsignado.options[i];
-                
-                if(opt.text === conductor.busAsignado){
-                    selBusAsignado.selectedIndex = i;
-                    break;
-                }
-               
-            }
-            
+
+
         }
     }
 
 
-    handleClickGuardar() {
-        // console.log("txtStdNumberRef: ", this.txtStdNumberRef);
-        // alert(this.txtStdNumberRef.current.value);
-        var selBusAsignado = this.cmbBusAsignadoRef.current;
-        this.props.handleSave(this.state.conductor, { 
+    handleClickGuardar = () => {
+
+        var request = {
             id: this.txtIdRef.current.value,
             rut: this.txtRutRef.current.value,
             nombre: this.txtNombreRef.current.value,
-            apellido: this.txtApellidoRef.current.value,
-            busAsignado: selBusAsignado.options[selBusAsignado.selectedIndex].text
-        });
+            apellido: this.txtApellidoRef.current.value
+        }
+
+        RequestHttpService.sendHttpRequest("PUT", "/conductor/put/modificaConductor", request, this.callModificarConductorOK, this.callModificarConductorError);
+    }
+
+    callModificarConductorOK = (response) => {
+        if (response.data.Message.code === "00") {
+            alert("Bus modificado correctamente");
+        } else {
+            alert("Error al modificar Bus");
+        }
+    }
+
+    callModificarConductorError = (error) => {
+        console.log("Error modificar Bus: ", error);
+        MessageManagerService.throwMessageError(error);
     }
 
 
@@ -91,7 +92,7 @@ class ModalModificarConductor extends Component {
                                 <div className="col-2">
                                     <div className="form-group">
                                         <label for="idTxtId" className="title-input-form">ID</label>
-                                        <input type="text" id="idTxtId" ref={this.txtIdRef} className="form-control" placeholder="ID" aria-label="ID" aria-describedby="ID conductor" />
+                                        <input type="text" id="idTxtId" ref={this.txtIdRef} className="form-control" placeholder="ID" aria-label="ID" aria-describedby="ID conductor" disabled />
                                     </div>
                                 </div>
                                 <div className="col-2">
@@ -100,8 +101,6 @@ class ModalModificarConductor extends Component {
                                         <input type="text" id="idTxtRut" ref={this.txtRutRef} className="form-control" placeholder="Rut conductor" aria-label="Rut conductor" aria-describedby="Rut conductor" />
                                     </div>
                                 </div>
-                            </div>
-                            <div className="row">
                                 <div className="col-2">
                                     <div className="form-group">
                                         <label for="idTxtNombre" className="title-input-form">Nombre</label>
@@ -112,16 +111,6 @@ class ModalModificarConductor extends Component {
                                     <div className="form-group">
                                         <label for="idTxtApellido" className="title-input-form">Apellido</label>
                                         <input type="text" id="idTxtApellido" ref={this.txtApellidoRef} className="form-control" placeholder="Apellido conductor" aria-label="Apellido conductor" aria-describedby="Apellido conductor" />
-                                    </div>
-                                </div>
-                                <div className="col-4">
-                                    <div className="form-group">
-                                        <label for="idCmbBusAsignado" className="title-input-form">Bus Asignado</label>
-                                        <select class="form-control" id="idCmbBusAsignado" ref={this.cmbBusAsignadoRef}>
-                                            <option value="1">bkvz-32</option>
-                                            <option value="2">bkvz-33</option>
-                                            <option value="3">bkvz-34</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>

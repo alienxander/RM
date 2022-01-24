@@ -3,6 +3,7 @@ import QuickFilteringGrid from '../../custom/CustomTableQuickFiltering';
 import Titulo from '../../custom/Titulo';
 import ModalModificarBus from './ModalModificarBus';
 import ModalNuevoBus from './ModalNuevoBus';
+import ModalBusAsignaciones from './ModalBusAsignaciones';
 import RequestHttpService from '../../service/RequestHttpService';
 import MessageManagerService from '../../service/MessageManagerService';
 
@@ -13,40 +14,42 @@ class MantenedorBuses extends Component {
             listaBuses: [],
             showModalNuevo: false,
             showModalModificar: false,
+            showModalAsignar: false,
             isShowBtnModificar: false,
             isShowBtnEliminar: false,
+            isShowBtnAsignar: false,
             busSeleccionado: null
         }
 
         this.columns = [{
             field: 'id',
             headerName: 'ID',
-            width: 200
+            width: 100
         }, {
             field: 'patente',
             headerName: 'Patente',
+            width: 150
+        }, {
+            field: 'descripcion',
+            headerName: 'Descripción',
             width: 200
         }, {
             field: 'rutConductor',
             headerName: 'Rut Conductor',
-            width: 250
+            width: 170
         }, {
             field: 'nomreConductor',
             headerName: 'Nombre Conductor',
-            width: 250
+            width: 200
         }, {
             field: 'recorrido',
             headerName: 'Recorrido',
-            width: 250
+            width: 150
         }, {
-            field: 'descripcion',
-            headerName: 'Descripción',
-            width: 600
+            field: 'horario',
+            headerName: 'Horario',
+            width: 200
         }];
-
-        this.showModalNuevoBus = this.showModalNuevoBus.bind(this);
-        this.guardarNuevoBus = this.guardarNuevoBus.bind(this);
-        this.modificarBus = this.modificarBus.bind(this);
 
     }
 
@@ -56,18 +59,23 @@ class MantenedorBuses extends Component {
 
     obtenerBuses = () => {
 
+        this.setState({ listaBuses: [] });
         RequestHttpService.obtenerBuses(this.callObtenerBusesOK, this.callObtenerBusesError);
     }
 
     callObtenerBusesOK = (response) => {
 
-        var listAlumnosResp = response.data.Body.listaBuses;
-        // console.log("Response listAlumnosResp: ", listAlumnosResp);
-        this.setState({ listaBuses: listAlumnosResp });
+        const listBusResp = response.data.Body.listaBuses;
+        const arrAux = [];
+        listBusResp.forEach((data, index) => {
+            data["id"] = index + 1;
+            arrAux[index] = data;
+        });
+
+        this.setState({ listaBuses: arrAux });
     }
 
     callObtenerBusesError = (error) => {
-        // console.log("Error buses: ", error);
         MessageManagerService.throwMessageError(error);
     }
 
@@ -75,11 +83,12 @@ class MantenedorBuses extends Component {
         this.setState({
             isShowBtnModificar: true,
             isShowBtnEliminar: true,
+            isShowBtnAsignar: true,
             busSeleccionado: row
         })
     }
 
-    showModalNuevoBus() {
+    showModalNuevoBus = () => {
         if (!this.state.showModalNuevo) {
             this.setState({ showModalNuevo: true });
         }
@@ -87,44 +96,10 @@ class MantenedorBuses extends Component {
 
     closeModalNuevoBus = () => {
 
-        //Se llaam de nuevo consulta de buses despues de cerrar modal de nuevo bus para actualizar grilla. 
+        //Se llama de nuevo consulta de buses despues de cerrar modal de nuevo bus actualizar grilla. 
         this.obtenerBuses();
         if (this.state.showModalNuevo) {
             this.setState({ showModalNuevo: false });
-        }
-    }
-
-    guardarNuevoBus(registro) {
-        console.log(registro);
-        //var listaAlumnos_aux = this.state.listaAlumnos;
-        var listaBuses_aux = Object.assign([], this.state.listaBuses);
-
-
-        if (this.state.showModalNuevo) {
-            //this.state.listaAlumnos.rows.push(registro);
-            listaBuses_aux.push(registro);
-
-            console.log("Lista nueva: ", listaBuses_aux);
-            // setTimeout(() => {
-            //     this.setState({ 
-            //         showModalNuevo: false
-            //     })
-            //   }, 1000);
-
-            this.setState(prevState => ({
-                showModalNuevo: false,
-                listaBuses: listaBuses_aux
-            }))
-
-            // this.setState({ 
-            //     listaAlumnos: listaAlumnos_aux
-            // });
-
-            alert("Bus ingresado correctamente");
-
-            // this.setState({ 
-            //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
-            // });
         }
     }
 
@@ -136,67 +111,38 @@ class MantenedorBuses extends Component {
 
     closeModalModificarBus = () => {
 
-         //Se llaam de nuevo consulta de buses despues de cerrar modal de nuevo bus para actualizar grilla. 
-         this.obtenerBuses();
+        //Se llaam de nuevo consulta de buses despues de cerrar modal de nuevo bus para actualizar grilla. 
+        this.obtenerBuses();
 
         if (this.state.showModalModificar) {
             this.setState({ showModalModificar: false });
         }
     }
 
-    modificarBus(registroOriginal, nuevoRegistro) {
-        console.log("Registro originsl: ", registroOriginal);
-        console.log("Registro nuevo: ", nuevoRegistro);
-        //var listaAlumnos_aux = this.state.listaAlumnos;
-        var listaBuses_aux = Object.assign([], this.state.listaBuses);
+    showModalAsignar = () => {
+        if (!this.state.showModalAsignar) {
+            this.setState({ showModalAsignar: true });
+        }
+    }
 
+    closeModalAsignar = () => {
+        //Se llaam de nuevo consulta de buses despues de cerrar modal de asignar para actualizar grilla. 
+        this.obtenerBuses();
 
-        if (this.state.showModalModificar) {
-            //this.state.listaAlumnos.rows.push(registro);
-            //const filtredData = this.listaAlumnos_aux.filter(item => item.id !== registro.id);
-            //listaAlumnos_aux.push(registro);
-            console.log("Lista en modific: ", listaBuses_aux);
-            var indice = listaBuses_aux.indexOf(registroOriginal);
-
-            console.log("Lista indexOf: ", indice);
-
-            listaBuses_aux[indice] = nuevoRegistro;
-            // setTimeout(() => {
-            //     this.setState({ 
-            //         showModalNuevo: false
-            //     })
-            //   }, 1000);
-
-            this.setState(prevState => ({
-                showModalModificar: false,
-                listaBuses: listaBuses_aux
-            }))
-
-            // this.setState({ 
-            //     listaAlumnos: listaAlumnos_aux
-            // });
-
-            alert("Bus modificdo correctamente");
-
-            // this.setState({ 
-            //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
-            // });
+        if (this.state.showModalAsignar) {
+            this.setState({ showModalAsignar: false });
         }
     }
 
     eliminarBus = () => {
-
-
-        if (window.confirm('Desea eliminar el bus seleccionado: ' + this.state.busSeleccionado.id)){
+        if (window.confirm('Desea eliminar el bus seleccionado: ' + this.state.busSeleccionado.patente)) {
             //se envía por parámetro ID de bus a eliminar. 
-            RequestHttpService.borrarBus(this.state.busSeleccionado.id, this.callborrarBusOK, this.callborrarBusError)
+            RequestHttpService.borrarBus(this.state.busSeleccionado.idBus, this.callborrarBusOK, this.callborrarBusError)
         }
-
     }
 
     callborrarBusOK = (response) => {
-
-        console.log("response borrado bus: " + JSON.stringify(response));
+        // console.log("response borrado bus: " + JSON.stringify(response));
         if (response.data.Message.code === "00") {
 
             alert("Bus Eliminado correctamente");
@@ -217,22 +163,20 @@ class MantenedorBuses extends Component {
         return (
             <div>
                 {this.state.showModalNuevo ?
-                    <ModalNuevoBus show={this.state.showModalNuevo} handleClose={this.closeModalNuevoBus} handleSave={this.guardarNuevoBus} />
+                    <ModalNuevoBus show={this.state.showModalNuevo} handleClose={this.closeModalNuevoBus} />
                     : null
                 }
-                {console.log("Alumno seleccionado render: ", this.state.busSeleccionado)}
+                {/* {console.log("bus seleccionado render: ", this.state.busSeleccionado)} */}
                 {this.state.showModalModificar ?
-                    <ModalModificarBus show={this.state.showModalModificar} bus={this.state.busSeleccionado} handleClose={this.closeModalModificarBus} handleSave={this.modificarBus} />
+                    <ModalModificarBus show={this.state.showModalModificar} bus={this.state.busSeleccionado} handleClose={this.closeModalModificarBus} />
+                    : null
+                }
+                {this.state.showModalAsignar ?
+                    <ModalBusAsignaciones show={this.state.showModalAsignar} bus={this.state.busSeleccionado} handleClose={this.closeModalAsignar} />
                     : null
                 }
                 <div className="container">
                     <Titulo titulo="Mantenedor de buses" />
-                    {console.log("Lista Alumnos Custom Table: ", this.state.listaAlumnos)}
-                    {/* <CustomTable 
-                        dataList={this.state.listaAlumnos}
-                        columns={this.columns}
-                        onRowSelect={this.handleOnRowSelect}
-                    /> */}
                     <QuickFilteringGrid
                         dataList={this.state.listaBuses}
                         columns={this.columns}
@@ -247,6 +191,10 @@ class MantenedorBuses extends Component {
                             }
                             {this.state.isShowBtnEliminar ?
                                 <button type="button" className="custom-btn" onClick={this.eliminarBus}>Eliminar</button>
+                                : null
+                            }
+                            {this.state.isShowBtnAsignar ?
+                                <button type="button" className="custom-btn" onClick={this.showModalAsignar}>Asignar</button>
                                 : null
                             }
                         </div>

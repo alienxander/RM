@@ -1,13 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import {
-    Button,
-    Modal,
-    InputGroup,
-    Dropdown,
-    DropdownButton,
-    FormControl
-} from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 
 import RequestHttpService from '../../service/RequestHttpService';
 import MessageManagerService from '../../service/MessageManagerService';
@@ -16,10 +9,6 @@ import MessageManagerService from '../../service/MessageManagerService';
 class ModalNuevoBus extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            listaConductores: [],
-            listaRecorridos: []
-        }
 
         this.txtPatenteRef = React.createRef();
         this.cmbConductorRef = React.createRef();
@@ -29,54 +18,14 @@ class ModalNuevoBus extends Component {
         this.txtRecorridoRef = React.createRef();
     }
 
-    componentDidMount() {
-
-        RequestHttpService.obtenerConductores(this.callobtenerConductoresOK, this.callobtenerConductoresError)
-        RequestHttpService.obtenerRecorridos(this.callObtenerRecorridosOK, this.callObtenerRecorridosError)
-
-    }
-
-    callobtenerConductoresOK = (response) => {
-        let listaConductores = response.data.Body;
-        console.log("Response Conductores: ", JSON.stringify(response));
-        this.setState({ listaConductores: listaConductores });
-    }
-
-    callobtenerConductoresError = (error) => {
-        console.log("Error Lista conductores: ", error);
-        MessageManagerService.throwMessageError(error);
-    }
-
-    callObtenerRecorridosOK = (response) => {
-        let listaRecorridos = response.data.Body;
-        console.log("Response recorridos: ", response);
-        this.setState({ listaRecorridos: listaRecorridos });
-    }
-
-    callObtenerRecorridosError = (error) => {
-        console.log("Error Lista recorridos: ", error);
-        MessageManagerService.throwMessageError(error);
-    }
-
-    handleClickConductor = (idConductor, rutConductor) => {
-        this.cmbConductorRef.current.value = idConductor;
-        this.tagConductorRef.current.value = rutConductor;
-    }
-
-    handleClickRecorrido = (idrecorrido) => {
-        this.txtRecorridoRef.current.value = idrecorrido;
-    }
-
     handleClickGuardar = () => {
 
         var request = {
             patente: this.txtPatenteRef.current.value,
-            idConductor: this.cmbConductorRef.current.value,
-            descripcion: this.txtDescripcionRef.current.value,
-            idRecorrido: this.txtRecorridoRef.current.value
+            descripcion: this.txtDescripcionRef.current.value
         }
 
-        RequestHttpService.ingresaBus(request, this.callIngresaBusOK, this.callIngresaBusError);
+        RequestHttpService.sendHttpRequest("PUT", "/bus/put/ingresaBus", request, this.callIngresaBusOK, this.callIngresaBusError);
     }
 
     callIngresaBusOK = (response) => {
@@ -118,52 +67,6 @@ class ModalNuevoBus extends Component {
                                         <input type="text" id="idTxtPatente" ref={this.txtPatenteRef} className="form-control" placeholder="Patente" aria-label="Patente" aria-describedby="Placa Patente del bus" />
                                     </div>
                                 </div>
-                                <div className="col-4">
-
-
-                                    <label for="idCmbConductor" className="title-input-form">Conductor</label>
-                                    <InputGroup className="mb-3">
-                                        <DropdownButton
-                                            className="title-input-form"
-                                            variant="outline-secondary"
-                                            title="Conductor"
-                                            id="idCmbConductor"
-                                            ref={this.cmbConductorRef}
-                                        >
-                                            {this.state.listaConductores.map((item) => {
-                                                return <Dropdown.Item href="#">
-                                                    <div onClick={() => this.handleClickConductor(item.id, item.rut)}>{item.nombre} {item.apellido} </div>
-                                                </Dropdown.Item>;
-                                            })
-                                            }
-
-                                        </DropdownButton>
-                                        <FormControl aria-label="Lista de Conductores" id="idTxtConductor" ref={this.tagConductorRef} />
-                                    </InputGroup>
-                                </div>
-                                <div className="col-4">
-                                    <label for="idCmbRecorrido" className="title-input-form">Recorrido</label>
-                                    <InputGroup className="mb-3">
-                                        <DropdownButton
-                                            className="title-input-form"
-                                            variant="outline-secondary"
-                                            title="Recorrido"
-                                            id="idCmbRecorrido"
-                                            ref={this.cmbRecorridoRef}
-                                        >
-                                            {this.state.listaRecorridos.map((item) => {
-                                                return <Dropdown.Item href="#">
-                                                    <div onClick={() => this.handleClickRecorrido(item.id)}>{item.codigo}</div>
-                                                </Dropdown.Item>;
-                                            })
-                                            }
-
-                                        </DropdownButton>
-                                        <FormControl aria-label="Lista de recorridos" id="idTxtRecorrido" ref={this.txtRecorridoRef} />
-                                    </InputGroup>
-                                </div>
-                            </div>
-                            <div className="row">
                                 <div className="col-6">
                                     <div className="form-group">
                                         <label for="idTxtDescripcion" className="title-input-form">Descripción</label>

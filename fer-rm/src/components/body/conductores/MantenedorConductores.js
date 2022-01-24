@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import QuickFilteringGrid from '../../custom/CustomTableQuickFiltering';
 import Titulo from '../../custom/Titulo';
+import MessageManagerService from '../../service/MessageManagerService';
+import RequestHttpService from '../../service/RequestHttpService';
 import ModalModificarConductor from './ModalModificarConductor';
 import ModalNuevoConductor from './ModalNuevoConductor';
+
 
 class MantenedorConductores extends Component {
     constructor(props) {
@@ -16,46 +19,66 @@ class MantenedorConductores extends Component {
             conductorSeleccionado: null
         }
 
-        this.columns = [{
-            field: 'id',
-            headerName: 'ID',
-            width: 200
-        }, {
-            field: 'rut',
-            headerName: 'Rut',
-            width: 200
-        }, {
-            field: 'nombre',
-            headerName: 'Nombre',
-            width: 250
-        }, {
-            field: 'apellido',
-            headerName: 'Apellido',
-            width: 250
-        }, {
-            field: 'busAsignado',
-            headerName: 'busAsignado',
-            width: 250
-        }];
+        this.columns = [
+            {
+                field: 'id',
+                headerName: 'ID',
+                width: 200
+            },
+            {
+                field: 'rut',
+                headerName: 'Rut',
+                width: 200
+            }, {
+                field: 'nombre',
+                headerName: 'Nombre',
+                width: 250
+            }, {
+                field: 'apellido',
+                headerName: 'Apellido',
+                width: 250
+            }
+        ];
 
         this.handleOnRowSelect = this.handleOnRowSelect.bind(this);
         this.showModalNuevoConductor = this.showModalNuevoConductor.bind(this);
         this.closeModalNuevoConductor = this.closeModalNuevoConductor.bind(this);
         this.showModalModificarConductor = this.showModalModificarConductor.bind(this);
         this.closeModalModificarConductor = this.closeModalModificarConductor.bind(this);
-        this.guardarNuevoConductor = this.guardarNuevoConductor.bind(this);
-        this.modificarConductor = this.modificarConductor.bind(this);
         this.eliminarConductor = this.eliminarConductor.bind(this);
     }
 
-    componentWillMount() {
-        const dataListConductores = [
-            { id: '1', rut: '1-9', nombre: 'Conductor1', apellido: 'Uno', busAsignado: 'bkvz-32'},
-            { id: '2', rut: '1-8', nombre: 'Conductor2', apellido: 'Dos', busAsignado: 'bkvz-33'},
-            { id: '3', rut: '2-1', nombre: 'Conductor3', apellido: 'Tres', busAsignado: 'bkvz-34'}
-        ]
-       
-        this.setState({ listaConductores: dataListConductores});
+    componentDidMount() {
+
+        this.obtenerConductores();
+    }
+
+    obtenerConductores = () => {
+        this.setState({ listaConductores: [] });
+
+        RequestHttpService.obtenerConductores(this.callObtenerConductoresOK, this.callObtenerConductoresError);
+    }
+
+    callObtenerConductoresOK = (response) => {
+
+        console.log("response conductores: " + JSON.stringify(response));
+
+        //const listConductoresResp = response.data.Body.listaConductores;
+        // const arrAux = [];
+        // listConductoresResp.forEach((data, index) => {
+        //     data["id"] = index + 1;
+        //     arrAux[index] = data;
+        // });
+
+        // this.setState({ listaConductores: arrAux });
+
+        //ori
+        var listConductoresResp = response.data.Body.listaConductores;
+        this.setState({ listaConductores: listConductoresResp });
+    }
+
+    callObtenerConductoresError = (error) => {
+        MessageManagerService.throwMessageError(error);
     }
 
     handleOnRowSelect(row) {
@@ -74,42 +97,9 @@ class MantenedorConductores extends Component {
     }
 
     closeModalNuevoConductor() {
+        this.obtenerConductores();
         if (this.state.showModalNuevo) {
             this.setState({ showModalNuevo: false });
-        }
-    }
-
-    guardarNuevoConductor(registro){
-        console.log(registro);
-        //var listaAlumnos_aux = this.state.listaAlumnos;
-        var listaConductores_aux = Object.assign([], this.state.listaConductores);
-        
-        
-        if (this.state.showModalNuevo) {
-            //this.state.listaAlumnos.rows.push(registro);
-            listaConductores_aux.push(registro);
-            
-            console.log("Lista nueva: ", listaConductores_aux);
-            // setTimeout(() => {
-            //     this.setState({ 
-            //         showModalNuevo: false
-            //     })
-            //   }, 1000);
-            
-            this.setState(prevState => ({
-                showModalNuevo: false,
-                listaConductores: listaConductores_aux
-              }))
-            
-            // this.setState({ 
-            //     listaAlumnos: listaAlumnos_aux
-            // });
-            
-            alert("Conductor ingresado correctamente");
-            
-            // this.setState({ 
-            //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
-            // });
         }
     }
 
@@ -120,88 +110,55 @@ class MantenedorConductores extends Component {
     }
 
     closeModalModificarConductor() {
+
+        this.obtenerConductores();
         if (this.state.showModalModificar) {
             this.setState({ showModalModificar: false });
         }
     }
 
-    modificarConductor(registroOriginal, nuevoRegistro){
-        console.log("Registro originsl: ", registroOriginal);
-        console.log("Registro nuevo: ", nuevoRegistro);
-        //var listaAlumnos_aux = this.state.listaAlumnos;
-        var listaConductores_aux = Object.assign([], this.state.listaConductores);
-        
-        
-        if (this.state.showModalModificar) {
-            //this.state.listaAlumnos.rows.push(registro);
-            //const filtredData = this.listaAlumnos_aux.filter(item => item.id !== registro.id);
-            //listaAlumnos_aux.push(registro);
-            console.log("Lista en modific: ", listaConductores_aux);
-            var indice = listaConductores_aux.indexOf(registroOriginal);
-            
-            console.log("Lista indexOf: ", indice);
+    eliminarConductor() {
 
-            listaConductores_aux[indice] = nuevoRegistro;
-            // setTimeout(() => {
-            //     this.setState({ 
-            //         showModalNuevo: false
-            //     })
-            //   }, 1000);
-            
-            this.setState(prevState => ({
-                showModalModificar: false,
-                listaConductores: listaConductores_aux
-              }))
-            
-            // this.setState({ 
-            //     listaAlumnos: listaAlumnos_aux
-            // });
-            
-            alert("Conductor modificdo correctamente");
-            
-            // this.setState({ 
-            //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
-            // });
+        if (window.confirm('Desea eliminar el Conductor seleccionado: ' + this.state.conductorSeleccionado.rut)) {
+            RequestHttpService.sendHttpRequest("DELETE", "/conductor/delete/" + this.state.conductorSeleccionado.id, "", this.callEliminarConductorOK, this.callEliminarConductorError);
         }
     }
 
-    eliminarConductor(){
-        var listaConductores_aux = Object.assign([], this.state.listaConductores);
-        var indice = listaConductores_aux.indexOf(this.state.conductorSeleccionado);
-        console.log("Indice a eliminar: ", indice);
-        if(indice !== -1){
-            this.setState({
-                listaConductores: listaConductores_aux.filter( item => item !== this.state.conductorSeleccionado )
-            });
+    callEliminarConductorOK = (response) => {
+        console.log("response borrado Conductor: " + JSON.stringify(response));
+        if (response.data.Message.code === "00") {
 
-            alert("Conductor eliminado correctamente");
+            alert("Conductor Eliminado correctamente");
+            //Se llama de nuevo consulta de Conductores despues de eliminado exitoso para actualizar grilla. 
+            this.obtenerConductores();
+        } else {
+
+            alert("Error al Eliminar Conductor");
         }
+    }
 
-        
+    callEliminarConductorError = (error) => {
+        console.log("Error eliminando Conductor: ", error);
+        MessageManagerService.throwMessageError(error);
     }
 
 
     render() {
         return (
             <div>
-                {this.state.showModalNuevo?
-                    <ModalNuevoConductor show={this.state.showModalNuevo} handleClose={this.closeModalNuevoConductor} handleSave={this.guardarNuevoConductor} />
-                :null
+                {this.state.showModalNuevo ?
+                    <ModalNuevoConductor show={this.state.showModalNuevo} handleClose={this.closeModalNuevoConductor} />
+                    : null
                 }
-                {console.log("Alumno seleccionado render: ", this.state.conductorSeleccionado)}
-                {this.state.showModalModificar?
-                    <ModalModificarConductor show={this.state.showModalModificar} conductor={this.state.conductorSeleccionado} handleClose={this.closeModalModificarConductor} handleSave={this.modificarConductor}/>
-                :null
+                {console.log("Conductor seleccionado render: ", this.state.conductorSeleccionado)}
+                {this.state.showModalModificar ?
+                    <ModalModificarConductor show={this.state.showModalModificar} conductor={this.state.conductorSeleccionado} handleClose={this.closeModalModificarConductor} />
+                    : null
                 }
                 <div className="container">
                     <Titulo titulo="Mantenedor de conductores" />
                     {console.log("Lista Conductores Custom Table: ", this.state.listaConductores)}
-                    {/* <CustomTable 
-                        dataList={this.state.listaAlumnos}
-                        columns={this.columns}
-                        onRowSelect={this.handleOnRowSelect}
-                    /> */}
-                    <QuickFilteringGrid 
+                    <QuickFilteringGrid
                         dataList={this.state.listaConductores}
                         columns={this.columns}
                         onRowSelect={this.handleOnRowSelect}
@@ -209,13 +166,13 @@ class MantenedorConductores extends Component {
                     <div className="botonera">
                         <div className="btn-group" role="group" aria-label="Basic example">
                             <button type="button" className="custom-btn" onClick={this.showModalNuevoConductor}>Nuevo</button>
-                            {this.state.isShowBtnModificar?
+                            {this.state.isShowBtnModificar ?
                                 <button type="button" className="custom-btn" onClick={this.showModalModificarConductor}>Modificar</button>
-                            :null
+                                : null
                             }
-                            {this.state.isShowBtnEliminar?
+                            {this.state.isShowBtnEliminar ?
                                 <button type="button" className="custom-btn" onClick={this.eliminarConductor}>Eliminar</button>
-                            :null
+                                : null
                             }
                         </div>
                     </div>

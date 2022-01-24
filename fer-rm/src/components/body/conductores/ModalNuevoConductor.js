@@ -1,10 +1,13 @@
-import React, { Component, useRef } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
     Modal,
     Button
 } from 'react-bootstrap';
+
+import RequestHttpService from '../../service/RequestHttpService';
+import MessageManagerService from '../../service/MessageManagerService';
 
 class ModalNuevoConductor extends Component {
     constructor(props) {
@@ -17,22 +20,30 @@ class ModalNuevoConductor extends Component {
         this.txtApellidoRef = React.createRef();
         this.cmbBusAsignadoRef = React.createRef();
 
-        this.handleClickGuardar = this.handleClickGuardar.bind(this);
     }
 
-    handleClickGuardar() {
-        // console.log("txtStdNumberRef: ", this.txtStdNumberRef);
-        // alert(this.txtStdNumberRef.current.value);
-        var selBusAsignado = this.cmbBusAsignadoRef.current;
-        this.props.handleSave({
-            id: 234,
+    handleClickGuardar = () => {
+        var request = {
             rut: this.txtRutRef.current.value,
             nombre: this.txtNombreRef.current.value,
-            apellido: this.txtApellidoRef.current.value,
-            busAsignado: selBusAsignado.options[selBusAsignado.selectedIndex].text
-        });
+            apellido: this.txtApellidoRef.current.value
+        }
+
+        RequestHttpService.sendHttpRequest("PUT", "/conductor/put/ingresaConductor", request, this.callIngresaConductorOK, this.callIngresaConductorError);
     }
 
+    callIngresaConductorOK = (response) => {
+        if (response.data.Message.code === "00") {
+            alert("Conductor ingresado correctamente");
+        } else {
+            alert("Error al ingresar Conductor");
+        }
+    }
+
+    callIngresaConductorError = (error) => {
+        console.log("Error ingresar Conductor: ", error);
+        MessageManagerService.throwMessageError(error);
+    }
 
     render() {
         return (
@@ -60,8 +71,6 @@ class ModalNuevoConductor extends Component {
                                         <input type="text" id="idTxtRut" ref={this.txtRutRef} className="form-control" placeholder="Rut conductor" aria-label="Rut conductor" aria-describedby="Rut conductor" />
                                     </div>
                                 </div>
-                            </div>
-                            <div className="row">
                                 <div className="col-2">
                                     <div className="form-group">
                                         <label for="idTxtNombre" className="title-input-form">Nombre</label>
@@ -72,17 +81,6 @@ class ModalNuevoConductor extends Component {
                                     <div className="form-group">
                                         <label for="idTxtApellido" className="title-input-form">Apellido</label>
                                         <input type="text" id="idTxtApellido" ref={this.txtApellidoRef} className="form-control" placeholder="Apellido conductor" aria-label="Apellido conductor" aria-describedby="Apellido conductor" />
-                                    </div>
-                                </div>
-                                <div className="col-4">
-                                    <div className="form-group">
-                                        <label for="idCmbBusAsignado" className="title-input-form">Bus Asignado</label>
-                                        <select class="form-control" id="idCmbBusAsignado" ref={this.cmbBusAsignadoRef}>
-                                            <option value="1">Bus 1</option>
-                                            <option value="2">Bus 2</option>
-                                            <option value="3">Bus 3</option>
-                                            <option value="4">Bus 4</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
