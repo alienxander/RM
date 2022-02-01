@@ -23,8 +23,8 @@ public class ConductorController {
 
 	@GetMapping(path = "/obtenerConductores", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseObject getListaConductores() {
-
-		return conductorService.getListaConductores();
+		ResponseObject response = conductorService.getListaConductores();
+		return response;
 	}
 
 	@PutMapping("/put/ingresaConductor")
