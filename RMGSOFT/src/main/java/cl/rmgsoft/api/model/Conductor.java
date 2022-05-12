@@ -2,6 +2,7 @@ package cl.rmgsoft.api.model;
 
 import java.io.Serializable;
 
+import cl.rmgsoft.utils.RutUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,10 @@ import lombok.NoArgsConstructor;
 //@NoArgsConstructor
 //@AllArgsConstructor
 public class Conductor implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7252088807570819812L;
 	private int id;
 	private String rut;
 	private String nombre;
@@ -24,41 +29,20 @@ public class Conductor implements Serializable {
 	}
 
 	public String getRutSinFormato() {
-		return rut.replace("-", "").replace(".", "");
+		return RutUtil.getRutSinFormato(this.rut);
 	}
 	
 	public String getRut() {
-		return this.rut;
+		if(this.getRutSinFormato().equals("0000")) {
+			return "Sin Asignar";
+		}else {
+			return this.rut;
+		}
+		
 	}
 
 	public void setRut(String rut) {
-		String sRut1 = rut;      //contador de para saber cuando insertar el . o la -
-	    int nPos = 0; //Guarda el rut invertido con los puntos y el guión agregado
-	    String sInvertido = ""; //Guarda el resultado final del rut como debe ser
-	    String sRut = "";
-	    for(int i = sRut1.length() - 1; i >= 0; i-- )
-	    {
-	        sInvertido += sRut1.charAt(i);
-	        if (i == sRut1.length() - 1 )
-	            sInvertido += "-";
-	        else if (nPos == 3)
-	        {
-	            sInvertido += ".";
-	            nPos = 0;
-	        }
-	        nPos++;
-	    }
-	    for(int j = sInvertido.length() - 1; j >= 0; j-- )
-	    {
-	        //if (sInvertido.charAt(sInvertido.length() - 1) != ".")
-	    	if (!".".equals(sInvertido.charAt(sInvertido.length() - 1)) )
-	            sRut += sInvertido.charAt(j);
-	        else if (j != sInvertido.length() - 1 )
-	            sRut += sInvertido.charAt(j);
-	    }
-	    //Pasamos al campo el valor formateado
-		
-		this.rut = sRut.toUpperCase();
+		this.rut = RutUtil.formatRut(rut);
 	}
 
 	public String getNombre() {

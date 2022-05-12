@@ -44,6 +44,10 @@ class MantenedorAlumnos extends Component {
             headerName: 'Dirección',
             width: 200
         }, {
+            field: 'email',
+            headerName: 'Mail',
+            width: 200
+        }, {
             field: 'telefono',
             headerName: 'Teléfono',
             width: 120
@@ -63,6 +67,22 @@ class MantenedorAlumnos extends Component {
             field: 'tipoTransporte',
             headerName: 'Tipo Transporte',
             width: 130
+        }, {
+            field: 'sector',
+            headerName: 'Sector',
+            width: 90
+        }, {
+            field: 'fechaInicioContrato',
+            headerName: 'Inicio Contrato',
+            width: 150
+        }, {
+            field: 'fechaFinContrato',
+            headerName: 'Fin Contrato',
+            width: 150
+        }, {
+            field: 'arancelContrato',
+            headerName: 'Arancel Contrato',
+            width: 150
         }];
 
         this.handleOnRowSelect = this.handleOnRowSelect.bind(this);
@@ -85,9 +105,13 @@ class MantenedorAlumnos extends Component {
         //     { id: 5, stdNumber: '636370', rut: '17.374.772-1', nombre: 'Javiera', apellido: 'Rojas', comuna: 'Lo Barnechea', direccion: 'Arturo Matte Larrain Sur 2468', telefono: '9999999', curso: '2° A', area: 'ECC', recorrido: 'IDRUNICO1', tipoTransporte: 'BUSXXX' }
         // ]
 
-        RequestHttpService.obtenerAlumnos(this.callObtenerAlumnosOK.bind(this), this.callObtenerAlumnosError.bind(this))
+        this.obtenerAlumnos();    
        
         //this.setState({ listaAlumnos: dataListAlumnos});
+    }
+
+    obtenerAlumnos = () => {
+        RequestHttpService.obtenerAlumnos(this.callObtenerAlumnosOK.bind(this), this.callObtenerAlumnosError.bind(this));
     }
 
     callObtenerAlumnosOK(response){
@@ -124,36 +148,51 @@ class MantenedorAlumnos extends Component {
 
     guardarNuevoAlumno(registro){
         console.log(registro);
+
+        RequestHttpService.sendHttpRequest("PUT", "/alumno/guardarAlumno", registro, this.callGuardarAlumnoOK, this.callGuardarAlumnoErr);
+
         //var listaAlumnos_aux = this.state.listaAlumnos;
-        var listaAlumnos_aux = Object.assign([], this.state.listaAlumnos);
+        //var listaAlumnos_aux = Object.assign([], this.state.listaAlumnos);
         
         
-        if (this.state.showModalNuevo) {
-            //this.state.listaAlumnos.rows.push(registro);
-            listaAlumnos_aux.push(registro);
+        // if (this.state.showModalNuevo) {
+        //     //this.state.listaAlumnos.rows.push(registro);
+        //     listaAlumnos_aux.push(registro);
             
-            console.log("Lista nueva: ", listaAlumnos_aux);
-            // setTimeout(() => {
-            //     this.setState({ 
-            //         showModalNuevo: false
-            //     })
-            //   }, 1000);
+        //     console.log("Lista nueva: ", listaAlumnos_aux);
+        //     // setTimeout(() => {
+        //     //     this.setState({ 
+        //     //         showModalNuevo: false
+        //     //     })
+        //     //   }, 1000);
             
-            this.setState(prevState => ({
-                showModalNuevo: false,
-                listaAlumnos: listaAlumnos_aux
-              }))
+        //     this.setState(prevState => ({
+        //         showModalNuevo: false,
+        //         listaAlumnos: listaAlumnos_aux
+        //       }))
             
-            // this.setState({ 
-            //     listaAlumnos: listaAlumnos_aux
-            // });
+        //     // this.setState({ 
+        //     //     listaAlumnos: listaAlumnos_aux
+        //     // });
             
-            alert("Alumno ingresado correctamente");
+        //     alert("Alumno ingresado correctamente");
             
-            // this.setState({ 
-            //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
-            // });
-        }
+        //     // this.setState({ 
+        //     //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
+        //     // });
+        // }
+    }
+
+    callGuardarAlumnoOK = (response) => {
+        console.log("Alumno guardado correctamente: ", response);
+        alert("Alumno guardado correctamente");
+
+        this.obtenerAlumnos();
+    }
+
+    callGuardarAlumnoErr = (error) => {
+        console.log("Error al guardar el alumno: ", error);
+        alert("Error al guardar el alumno");
     }
 
     showModalModificarAlumno() {
@@ -168,59 +207,43 @@ class MantenedorAlumnos extends Component {
         }
     }
 
-    modificarAlumno(registroOriginal, nuevoRegistro){
-        console.log("Registro originsl: ", registroOriginal);
-        console.log("Registro nuevo: ", nuevoRegistro);
-        //var listaAlumnos_aux = this.state.listaAlumnos;
-        var listaAlumnos_aux = Object.assign([], this.state.listaAlumnos);
-        
-        
-        if (this.state.showModalModificar) {
-            //this.state.listaAlumnos.rows.push(registro);
-            //const filtredData = this.listaAlumnos_aux.filter(item => item.id !== registro.id);
-            //listaAlumnos_aux.push(registro);
-            console.log("Lista en modific: ", listaAlumnos_aux);
-            var indice = listaAlumnos_aux.indexOf(registroOriginal);
-            
-            console.log("Lista indexOf: ", indice);
+    modificarAlumno(registro){
+        console.log("REGISTRO MODIFICAR ALUMNO::: ", registro);
 
-            listaAlumnos_aux[indice] = nuevoRegistro;
-            // setTimeout(() => {
-            //     this.setState({ 
-            //         showModalNuevo: false
-            //     })
-            //   }, 1000);
-            
-            this.setState(prevState => ({
-                showModalModificar: false,
-                listaAlumnos: listaAlumnos_aux
-              }))
-            
-            // this.setState({ 
-            //     listaAlumnos: listaAlumnos_aux
-            // });
-            
-            alert("Alumno modificdo correctamente");
-            
-            // this.setState({ 
-            //     listaAlumnos: {columns: this.state.listaAlumnos.columns, rows: listaAlumnos}
-            // });
-        }
+        RequestHttpService.sendHttpRequest("PUT", "/alumno/modificarAlumno", registro, this.callModificarAlumnoOK, this.callModificarAlumnoErr);
+        
+        
+    }
+
+    callModificarAlumnoOK = (response) => {
+        console.log("Alumno modificado correctamente: ", response);
+        alert("Alumno modificado correctamente");
+
+        this.obtenerAlumnos();
+    }
+
+    callModificarAlumnoErr = (error) => {
+        console.log("Error al modificar el alumno: ", error);
+        alert("Error al modificar el alumno");
     }
 
     eliminarAlumno(){
-        var listaAlumnos_aux = Object.assign([], this.state.listaAlumnos);
-        var indice = listaAlumnos_aux.indexOf(this.state.alumnoSeleccionado);
-        console.log("Indice a eliminar: ", indice);
-        if(indice !== -1){
-            this.setState({
-                listaAlumnos: listaAlumnos_aux.filter( item => item !== this.state.alumnoSeleccionado )
-            });
-
-            alert("Alumno eliminado correctamente");
-        }
+        //var listaAlumnos_aux = Object.assign([], this.state.listaAlumnos);
+        //var indice = listaAlumnos_aux.indexOf(this.state.alumnoSeleccionado);
+        console.log("Alumno seleccionado: ", this.state.alumnoSeleccionado);
+        
+        RequestHttpService.sendHttpRequest("DELETE", "/alumno/eliminarAlumno/" + this.state.alumnoSeleccionado.stdNumber, "", this.callEliminarAlumnoOK, this.callEliminarAlumnoErr);
 
         
+    }
+
+    callEliminarAlumnoOK = (response) => {
+        this.obtenerAlumnos();
+        alert("Alumno eliminado correctamente");
+    }
+
+    callEliminarAlumnoErr = (error) => {
+        alert("Error al eliminar alumno: " + error);
     }
 
 
@@ -228,12 +251,13 @@ class MantenedorAlumnos extends Component {
         return (
             <div>
                 {this.state.showModalNuevo?
-                    <ModalNuevoAlumno show={this.state.showModalNuevo} handleClose={this.closeModalNuevoAlumno} handleSave={this.guardarNuevoAlumno} />
+                    <ModalNuevoAlumno show={this.state.showModalNuevo} alumno={null} isModificar={false} handleClose={this.closeModalNuevoAlumno} handleSave={this.guardarNuevoAlumno} />
                 :null
                 }
                 {console.log("Alumno seleccionado render: ", this.state.alumnoSeleccionado)}
                 {this.state.showModalModificar?
-                    <ModalModificarAlumno show={this.state.showModalModificar} alumno={this.state.alumnoSeleccionado} handleClose={this.closeModalModificarAlumno} handleSave={this.modificarAlumno}/>
+                    // <ModalModificarAlumno show={this.state.showModalModificar} alumno={this.state.alumnoSeleccionado} handleClose={this.closeModalModificarAlumno} handleSave={this.modificarAlumno}/>
+                    <ModalNuevoAlumno show={this.state.showModalModificar} alumno={this.state.alumnoSeleccionado} isModificar={true} handleClose={this.closeModalModificarAlumno} handleSave={this.modificarAlumno} />
                 :null
                 }
                 <div className="container">

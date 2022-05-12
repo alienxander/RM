@@ -22,11 +22,21 @@ public class Alumno implements Serializable{
 	private String rut;
 	private String nombre;
 	private String apellido;
+	private int idComuna;
 	private String comuna;
 	private String direccion;
 	private String telefono;
+	private int idCurso;
 	private String curso;
+	private int idArea;
 	private String area;
+	private int idRecorrido;
 	private String recorrido;
+	private int idBus;
 	private String tipoTransporte;
+	private String email;
+	private int sector;
+	private String fechaInicioContrato;
+	private String fechaFinContrato;
+	private int arancelContrato;
 }

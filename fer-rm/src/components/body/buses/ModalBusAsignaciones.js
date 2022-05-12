@@ -21,7 +21,9 @@ class ModalBusAsignaciones extends Component {
             listaRecorridos: [],
             isShowBtnNuevo: false,
             isNewReg: false,
-            horario: ""
+            horario: "",
+            idConductor: undefined,
+            idRecorrido: undefined
         }
         this.txtIdRef = React.createRef();
         this.txtPatenteRef = React.createRef();
@@ -29,6 +31,7 @@ class ModalBusAsignaciones extends Component {
         this.tagConductorRef = React.createRef();
         this.cmbRecorridoRef = React.createRef();
         this.txtRecorridoRef = React.createRef();
+        this.txtHorarioRef = React.createRef();
 
     }
 
@@ -38,6 +41,7 @@ class ModalBusAsignaciones extends Component {
         // if (prevProps !== this.props) {
         //     this.setState({ bus: this.props.bus });
         // }
+        
     }
 
     componentDidMount() {
@@ -48,6 +52,7 @@ class ModalBusAsignaciones extends Component {
         var selConductor = this.cmbConductorRef.current;
 
         console.log("BUs selConductor: ", selConductor);
+        console.log("BUS SELECCIONADO: ", bus);
         // console.log("BUs componentDidMount: ", this.cmbConductorRef.current);
         // console.log("BUs selConductor: ", selConductor);
 
@@ -59,6 +64,10 @@ class ModalBusAsignaciones extends Component {
             this.txtIdRef.current.value = bus.idBus;
             this.txtPatenteRef.current.value = bus.patente;
 
+            //this.cmbConductorRef.current.value = bus.id;
+            this.tagConductorRef.current.value = bus.rutConductor;
+            this.txtRecorridoRef.current.value = bus.recorrido;
+            this.txtHorarioRef.current.value = bus.horario;
             if (bus.idBusConductorRecorrido !== "0") {
                 this.setState({ isNewReg: true });
             }
@@ -108,9 +117,11 @@ class ModalBusAsignaciones extends Component {
         var request = {
             idBus: this.txtIdRef.current.value,
             idBusConductorRecorrido: this.state.bus.idBusConductorRecorrido,
-            idConductor: this.cmbConductorRef.current.value,
-            idRecorrido: this.txtRecorridoRef.current.value
+            idConductor: this.cmbConductorRef.current.value !== undefined?this.cmbConductorRef.current.value:this.state.idConductor,
+            idRecorrido: this.cmbRecorridoRef.current.value !== undefined?this.cmbRecorridoRef.current.value:this.state.idRecorrido
         }
+
+        console.log("REQUEST NUEVA ASIGNACION:: ", request);
 
         RequestHttpService.sendHttpRequest("PUT", "/bus/put/asignarNuevoBus", request, this.callNuevoOK, this.callNuevoError);
 
@@ -135,9 +146,11 @@ class ModalBusAsignaciones extends Component {
         var request = {
             idBus: this.txtIdRef.current.value,
             idBusConductorRecorrido: this.state.bus.idBusConductorRecorrido,
-            idConductor: this.cmbConductorRef.current.value,
-            idRecorrido: this.txtRecorridoRef.current.value
+            idConductor: this.cmbConductorRef.current.value !== undefined?this.cmbConductorRef.current.value:this.state.idConductor,
+            idRecorrido: this.cmbRecorridoRef.current.value !== undefined?this.cmbRecorridoRef.current.value:this.state.idRecorrido
         }
+
+        console.log("Request actualizar bus: ", request);
 
         RequestHttpService.sendHttpRequest("PUT", "/bus/put/asignarBus", request, this.callActualizarBusOK, this.callActualizarBusError);
 
@@ -159,6 +172,7 @@ class ModalBusAsignaciones extends Component {
     handleClickConductor = (item) => {
         this.cmbConductorRef.current.value = item.id;
         this.tagConductorRef.current.value = item.rut;
+        
 
         if (("1" === this.txtRecorridoRef.current.value && 1 === item.id) || !this.state.isNewReg) {
             this.setState({ isShowBtnNuevo: false });
@@ -168,8 +182,14 @@ class ModalBusAsignaciones extends Component {
     }
 
     handleClickRecorrido = (item) => {
-        this.txtRecorridoRef.current.value = item.id;
-        this.setState({ horario: item.horaInicio + " - " + item.horaFin });
+        this.cmbRecorridoRef.current.value = item.id;
+        this.txtRecorridoRef.current.value = item.codigo;
+        this.setState({ horario: item.horaInicio + " - " + item.horaFin,
+                        bus: {
+                                idBusConductorRecorrido: this.state.bus.idBusConductorRecorrido,
+                                horario: item.horaInicio + " - " + item.horaFin,
+                             }
+                     });
 
         if ((1 === this.cmbConductorRef.current.value && 1 === item.id) || !this.state.isNewReg) {
             this.setState({ isShowBtnNuevo: false });
@@ -178,7 +198,18 @@ class ModalBusAsignaciones extends Component {
         }
     }
 
+    handleClickAgregarRecorrido = () => {
+        var request = {
+            codigo: this.txtRecorridoRef.current.value,
+            horaInicio: this.txtNombreRef.current.value,
+            horaFin: this.txtApellidoRef.current.value
+        }
+
+        RequestHttpService.sendHttpRequest("PUT", "/conductor/put/ingresaConductor", request, this.callIngresaConductorOK, this.callIngresaConductorError);
+    }
+
     render() {
+        
         return (
             <Modal
                 show={this.props.show}
@@ -222,7 +253,12 @@ class ModalBusAsignaciones extends Component {
                                             ref={this.cmbConductorRef}
                                         >
                                             {console.log("value cmbConductorRef combobox ", this.cmbConductorRef)}
+                                            
                                             {this.state.listaConductores.map((item) => {
+                                                if(item.rut === this.state.bus.rutConductor){
+                                                    console.log("ID Conductor es: ", item.id);
+                                                    this.state.idConductor = item.id;
+                                                }
                                                 return <Dropdown.Item href="#" >
                                                     <div onClick={() => this.handleClickConductor(item)}>{item.nombre} {item.apellido} </div>
                                                 </Dropdown.Item>;
@@ -233,7 +269,6 @@ class ModalBusAsignaciones extends Component {
                                         {console.log("value tagConductorRef combobox ", this.tagConductorRef)}
                                         <FormControl aria-label="Lista de Conductores" id="idTxtConductor" ref={this.tagConductorRef} />
                                     </InputGroup>
-
                                 </div>
 
                                 <div className="col-3">
@@ -247,9 +282,14 @@ class ModalBusAsignaciones extends Component {
                                             ref={this.cmbRecorridoRef}
                                         >
                                             {this.state.listaRecorridos.map((item) => {
+                                                if(item.codigo === this.state.bus.recorrido){
+                                                    console.log("ID Recorrido es: ", item.id);
+                                                    this.state.idRecorrido = item.id;
+                                                }
                                                 return <Dropdown.Item href="#">
                                                     <div onClick={() => this.handleClickRecorrido(item)}>{item.codigo}</div>
-
+                                                    {/* bus.rutConductor;
+                                                    this.txtRecorridoRef.current.value = bus.recorrido; */}
                                                 </Dropdown.Item>;
                                             })
                                             }
@@ -264,7 +304,7 @@ class ModalBusAsignaciones extends Component {
                                 <div className="col-2">
                                     <div className="form-group">
                                         <label for="idTxtHorario" className="title-input-form">Horario</label>
-                                        <input type="text" id="idTxtHorario" value={this.state.horario} className="form-control" placeholder="Horario" aria-label="Horario" aria-describedby="Horario Recorrido" maxlength="7" disabled />
+                                        <input type="text" id="idTxtHorario" value={this.state.bus.horario} ref={this.txtHorarioRef} className="form-control" placeholder="Horario" aria-label="Horario" aria-describedby="Horario Recorrido" maxlength="7" disabled />
                                     </div>
                                 </div>
 

@@ -26,6 +26,12 @@ public class BusController {
 
 		return busService.getListaBuses();
 	}
+	
+	@GetMapping(path = "/obtenerBuses/{idRecorrido}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseObject getListaBuses(@PathVariable int idRecorrido) {
+
+		return busService.getListaBuses(idRecorrido);
+	}
 
 	@PutMapping("/put/ingresaBus")
 	public ResponseObject putBus(@RequestBody Bus bus) {
@@ -51,7 +57,7 @@ public class BusController {
 		return busService.asignarBus(bus);
 	}
 
-	@PutMapping("/put/asignarNuevoBus")
+	@PutMapping(value = "/put/asignarNuevoBus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseObject asignarNuevoBus(@RequestBody Bus bus) {
 
 		return busService.asignarNuevoBus(bus);

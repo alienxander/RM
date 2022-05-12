@@ -37,6 +37,22 @@ public class BusServiceImpl implements BusService {
 		responseObject.setMessage(message);
 		return responseObject;
 	}
+	
+	@Override
+	public ResponseObject getListaBuses(int idRecorrido) {
+		ListaBusesResponse listaBusesResponse = new ListaBusesResponse();
+		List<Bus> listaBuses = busDAO.getListaBuses(idRecorrido);
+		listaBusesResponse.setListaBuses(listaBuses);
+
+		message.setCode("00");
+		message.setType(MessageType.OK);
+		message.setTitle("EXITO");
+		message.setDescription("El servicio ha respondido correctamente");
+
+		responseObject.setBody(listaBusesResponse);
+		responseObject.setMessage(message);
+		return responseObject;
+	}
 
 	@Override
 	public ResponseObject putBus(Bus bus) {

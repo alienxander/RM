@@ -31,5 +31,56 @@ public class RecorridoServiceImpl implements RecorridoService{
 		responseObject.setMessage(message);
 		return responseObject;
 	}
+	
+	@Override
+	public ResponseObject getRecorrido(String codigo) {
+		// TODO Auto-generated method stub
+		List<Recorrido> lista = recorridoDao.getRecorrido(codigo);
+		if(lista.size() == 1) {
+			message.setCode("00");
+			message.setType(MessageType.OK);
+			message.setTitle("EXITO");
+			message.setDescription("El servicio ha respondido correctamente");
+			responseObject.setBody(lista.get(0));
+			responseObject.setMessage(message);
+		}else {
+			message.setCode("01");
+			message.setType(MessageType.ERROR);
+			message.setTitle("ERROR");
+			message.setDescription("El recorrido no es único");
+			responseObject.setBody(null);
+			responseObject.setMessage(message);
+		}
+		
+		return responseObject;
+	}
+	
+	@Override
+	public ResponseObject putRecorrido(Recorrido recorrido) {
+		// TODO Auto-generated method stub
+		int response = 0;
+		response = recorridoDao.putRecorrido(recorrido);
+
+		// response OK del insert realizado retorna el valor "1"
+		if (response == 1) {
+
+			message.setCode("00");
+			message.setType(MessageType.OK);
+			message.setTitle("EXITO");
+			message.setDescription("El servicio ha respondido correctamente");
+			responseObject.setBody(recorrido);
+		} else {
+			responseObject.setBody(null);
+			message.setCode("99");
+			message.setType(MessageType.ERROR);
+			message.setTitle("ERROR");
+			message.setDescription("El servicio ha tenido un error");
+		}
+		
+		responseObject.setMessage(message);
+		return responseObject;
+	}
+
+	
 
 }

@@ -1,24 +1,17 @@
 package cl.rmgsoft.api.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import cl.rmgsoft.api.model.Alumno;
 import cl.rmgsoft.api.response.ResponseObject;
-import cl.rmgsoft.api.response.model.ListaAlumnosResponse;
-import cl.rmgsoft.api.response.model.message.Message;
-import cl.rmgsoft.api.response.model.message.MessageType;
 import cl.rmgsoft.api.service.AlumnoService;
 
 @RestController
@@ -31,5 +24,30 @@ public class AlumnoController {
 	public ResponseObject getListaAlumnos(){
 		
 		return alumnoService.getListaAlumnos();
+	}
+	
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/obtenerAlumnos/{stdNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseObject getListaAlumnos(@PathVariable int stdNumber){
+		
+		return alumnoService.getListaAlumnos(stdNumber);
+	}
+	
+	@PutMapping(value = "/guardarAlumno", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseObject guardarAlumno(@RequestBody Alumno alumno) {
+
+		return alumnoService.guardarAlumno(alumno);
+	}
+	
+	@PutMapping(value = "/modificarAlumno", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseObject modificarAlumno(@RequestBody Alumno alumno) {
+
+		return alumnoService.modificarAlumno(alumno);
+	}
+	
+	@DeleteMapping(value = "/eliminarAlumno/{stdNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseObject eliminarAlumno(@PathVariable int stdNumber) {
+
+		return alumnoService.eliminarAlumno(stdNumber);
 	}
 }

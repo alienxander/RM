@@ -1,17 +1,17 @@
 INSERT INTO dbo."Area"(
-	id, descripcion, codigo)
+	descripcion, codigo)
 	VALUES ('PK A K1', 'ECC');
 
 INSERT INTO dbo."Area"(
-	id, descripcion, codigo)
+	descripcion, codigo)
 	VALUES ('K2 A 5°', 'ES');
 	
 INSERT INTO dbo."Area"(
-	id, descripcion, codigo)
+	descripcion, codigo)
 	VALUES ('6° A 8°', 'MS');
 	
 INSERT INTO dbo."Area"(
-	id, descripcion, codigo)
+	descripcion, codigo)
 	VALUES ('1° A 4° MEDIO', 'HS');
 
 INSERT INTO dbo."Curso"(descripcion, id_area) VALUES ('Pre Kinder', 1);

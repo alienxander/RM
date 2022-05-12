@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/rmgsoft/static/css/main.aead8966.chunk.css",
-    "main.js": "/rmgsoft/static/js/main.f936172e.chunk.js",
-    "main.js.map": "/rmgsoft/static/js/main.f936172e.chunk.js.map",
-    "runtime-main.js": "/rmgsoft/static/js/runtime-main.be2a1429.js",
-    "runtime-main.js.map": "/rmgsoft/static/js/runtime-main.be2a1429.js.map",
-    "static/js/2.b96ff574.chunk.js": "/rmgsoft/static/js/2.b96ff574.chunk.js",
-    "static/js/2.b96ff574.chunk.js.map": "/rmgsoft/static/js/2.b96ff574.chunk.js.map",
-    "static/js/3.97353732.chunk.js": "/rmgsoft/static/js/3.97353732.chunk.js",
-    "static/js/3.97353732.chunk.js.map": "/rmgsoft/static/js/3.97353732.chunk.js.map",
+    "main.js": "/rmgsoft/static/js/main.53ad31d8.chunk.js",
+    "main.js.map": "/rmgsoft/static/js/main.53ad31d8.chunk.js.map",
+    "runtime-main.js": "/rmgsoft/static/js/runtime-main.1030768a.js",
+    "runtime-main.js.map": "/rmgsoft/static/js/runtime-main.1030768a.js.map",
+    "static/js/2.d40927e6.chunk.js": "/rmgsoft/static/js/2.d40927e6.chunk.js",
+    "static/js/2.d40927e6.chunk.js.map": "/rmgsoft/static/js/2.d40927e6.chunk.js.map",
+    "static/js/3.321b8156.chunk.js": "/rmgsoft/static/js/3.321b8156.chunk.js",
+    "static/js/3.321b8156.chunk.js.map": "/rmgsoft/static/js/3.321b8156.chunk.js.map",
     "index.html": "/rmgsoft/index.html",
     "static/css/main.aead8966.chunk.css.map": "/rmgsoft/static/css/main.aead8966.chunk.css.map",
-    "static/js/2.b96ff574.chunk.js.LICENSE.txt": "/rmgsoft/static/js/2.b96ff574.chunk.js.LICENSE.txt"
+    "static/js/2.d40927e6.chunk.js.LICENSE.txt": "/rmgsoft/static/js/2.d40927e6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.be2a1429.js",
-    "static/js/2.b96ff574.chunk.js",
+    "static/js/runtime-main.1030768a.js",
+    "static/js/2.d40927e6.chunk.js",
     "static/css/main.aead8966.chunk.css",
-    "static/js/main.f936172e.chunk.js"
+    "static/js/main.53ad31d8.chunk.js"
   ]
 }

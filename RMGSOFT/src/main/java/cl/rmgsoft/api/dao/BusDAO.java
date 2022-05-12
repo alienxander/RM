@@ -6,6 +6,7 @@ import cl.rmgsoft.api.model.Bus;
 
 public interface BusDAO {
 	public List<Bus> getListaBuses();
+	public List<Bus> getListaBuses(int idRecorrido);
 
 	public int putBus(Bus bus);
 

@@ -32,6 +32,24 @@ public class BusDaoImpl implements BusDAO {
 
 		return jdbcTemplate.query(sql, new BusMapper());
 	}
+	
+	@Override
+	public List<Bus> getListaBuses(int idRecorrido) {
+
+		String sql = "SELECT B.id, B.patente, B.descripcion, C.rut, CONCAT(C.nombre, ' ',C.apellido ) AS nombre,\r\n" + 
+				"							R.codigo AS recorrido, CONCAT(R.\"horaInicio\", ' - ',R.\"horaFin\" ) AS horario,\r\n" + 
+				"							BCR.id  AS \"idBusConductorRecorrido\"\r\n" + 
+				"					FROM dbo.bus_conductor_recorrido AS BCR, dbo.\"Bus\" AS B , dbo.\"Conductor\" AS C,\r\n" + 
+				"							dbo.\"Recorrido\" AS R\r\n" + 
+				"					WHERE BCR.id_bus= B.id AND  BCR.id_conductor= C.id\r\n" + 
+				"							AND BCR.id_recorrido = R.id AND R.id = " + idRecorrido + "\r\n" + 
+				"					UNION ALL\r\n" + 
+				"					SELECT B.*,'0000' AS rut , 'Sin  Asignar'  AS nombre, 'Sin Recorr' AS recorrido ,\r\n" + 
+				"							'00:00 - 00:00' AS horario ,  '0' AS \"idBusConductorRecorrido\" FROM dbo.\"Bus\" AS B\r\n" + 
+				"					WHERE (B.id NOT IN (SELECT  BCR.id_bus FROM dbo.bus_conductor_recorrido AS BCR ) )";
+
+		return jdbcTemplate.query(sql, new BusMapper());
+	}
 
 	@Override
 	public int putBus(Bus bus) {

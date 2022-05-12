@@ -15,4 +15,6 @@ public class LookUpRequest implements Serializable{
 	 */
 	private static final long serialVersionUID = -7049009078981857281L;
 	private String tabla;
+	private String campoFilter;
+	private int idFilter = 0; 
 }

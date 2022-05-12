@@ -11,16 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class InitController {
 	
-	@RequestMapping("/init.do")
-	public String init(Model modelo) {
+	@RequestMapping("/admin/init.do")
+	public String init(ModelMap modelo) {
 		modelo.addAttribute("mensaje", "Hola Mundo desde thymeleaf");
-		return "index";
+		return "/admin/index";
 	}
 	
-	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
-	public String logout(ModelMap model, HttpSession session) {
-		session.invalidate();
-		//return "redirect:/rmgsoft/login";
-		return "login";
-	}
+	
 }

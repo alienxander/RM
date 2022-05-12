@@ -19,8 +19,15 @@ public class LookUpDaoImpl implements LookUpDAO{
 	private JdbcTemplate jdbcTemplate;
 	@Override
 	public List<LookUp> getLista(LookUpRequest request) {
-		String sql = "SELECT id, descripcion\r\n" + 
-				"FROM dbo.\"" + request.getTabla() + "\"";
+		String sql = null;
+		if(request.getIdFilter() == 0) {
+			sql = "SELECT id, descripcion\r\n" + 
+					"FROM dbo.\"" + request.getTabla() + "\"";
+		}else {
+			sql = "SELECT id, descripcion\r\n" + 
+					"FROM dbo.\"" + request.getTabla() + "\" where " + request.getCampoFilter() + "=" + request.getIdFilter();
+		}
+		
 		return jdbcTemplate.query(sql, new LookUpMapper());
 	}
 	@Override

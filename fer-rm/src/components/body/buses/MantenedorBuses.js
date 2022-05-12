@@ -4,6 +4,7 @@ import Titulo from '../../custom/Titulo';
 import ModalModificarBus from './ModalModificarBus';
 import ModalNuevoBus from './ModalNuevoBus';
 import ModalBusAsignaciones from './ModalBusAsignaciones';
+import ModalRecorridos from './ModalRecorridos';
 import RequestHttpService from '../../service/RequestHttpService';
 import MessageManagerService from '../../service/MessageManagerService';
 
@@ -15,6 +16,7 @@ class MantenedorBuses extends Component {
             showModalNuevo: false,
             showModalModificar: false,
             showModalAsignar: false,
+            showModalRecorrido: false,
             isShowBtnModificar: false,
             isShowBtnEliminar: false,
             isShowBtnAsignar: false,
@@ -134,6 +136,21 @@ class MantenedorBuses extends Component {
         }
     }
 
+    showModalRecorrido = () => {
+        if (!this.state.showModalRecorrido) {
+            this.setState({ showModalRecorrido: true });
+        }
+    }
+
+    closeModalRecorrido = () => {
+        //Se llaam de nuevo consulta de buses despues de cerrar modal de asignar para actualizar grilla. 
+        //this.obtenerBuses();
+
+        if (this.state.showModalRecorrido) {
+            this.setState({showModalRecorrido: false });
+        }
+    }
+
     eliminarBus = () => {
         if (window.confirm('Desea eliminar el bus seleccionado: ' + this.state.busSeleccionado.patente)) {
             //se envía por parámetro ID de bus a eliminar. 
@@ -175,6 +192,10 @@ class MantenedorBuses extends Component {
                     <ModalBusAsignaciones show={this.state.showModalAsignar} bus={this.state.busSeleccionado} handleClose={this.closeModalAsignar} />
                     : null
                 }
+                {this.state.showModalRecorrido ?
+                    <ModalRecorridos show={this.state.showModalRecorrido} handleClose={this.closeModalRecorrido} />
+                    : null
+                }
                 <div className="container">
                     <Titulo titulo="Mantenedor de buses" />
                     <QuickFilteringGrid
@@ -197,6 +218,7 @@ class MantenedorBuses extends Component {
                                 <button type="button" className="custom-btn" onClick={this.showModalAsignar}>Asignar</button>
                                 : null
                             }
+                            <button type="button" className="custom-btn" onClick={this.showModalRecorrido}>Recorridos</button>
                         </div>
                     </div>
                     <br />

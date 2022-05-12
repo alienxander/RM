@@ -19,8 +19,8 @@ public class ConductorDaoImpl implements ConductorDAO {
 	public List<Conductor> getListaConductores() {
 
 		String sql = "SELECT \"id\", rut, nombre, apellido\r\n" 
-					+ "FROM dbo.\"Conductor\" \r\n";
-//					+ "WHERE \"id\" != 1 ";
+					+ "FROM dbo.\"Conductor\" \r\n"
+					+ "WHERE \"id\" != 1 ";
 
 		return jdbcTemplate.query(sql, new ConductorMapper());
 	}
@@ -62,11 +62,12 @@ public class ConductorDaoImpl implements ConductorDAO {
 
 		try {
 
-			return jdbcTemplate.update(sql, new Object[] { conductor.getRut(), conductor.getNombre(),
+			return jdbcTemplate.update(sql, new Object[] { conductor.getRutSinFormato(), conductor.getNombre(),
 					conductor.getApellido(), conductor.getId() });
 
 		} catch (Exception err) {
 			// Quien llama el método espera retornar valor "1" para OK y valor "0" ERR
+			err.printStackTrace();
 			return 0;
 		}
 	}
